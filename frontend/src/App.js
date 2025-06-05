@@ -4,6 +4,7 @@ import Navbar from "./layouts/Navbar";
 import Footer from "./layouts/Footer";
 import PublicRoutes from "./routes/PublicRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
+import TutorRoutes from "./routes/TutorRoutes";
 
 const App = () => {
     return (
@@ -13,6 +14,7 @@ const App = () => {
                 <div className="flex-grow mt-20">
                     <PublicRoutes />
                     <AdminRoutes />
+                    <TutorRoutes />
                 </div>
                 <Footer />
             </div>

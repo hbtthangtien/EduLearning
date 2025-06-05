@@ -7,11 +7,13 @@ import ContactForm from "../components/ContactForm";
 import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
 import TutorApplication from "../components/TutorApplication";
-import TutorTypical from "../components/TutorTypical";
+import TutorTypical from "../layouts/TutorTypical";
 import TutorList from "../components/TutorList";
 import CourseList from "../components/CourseList";
 import BecomeTutorSection from "../layouts/BecomeTutorSection";
 import StarSection from "../layouts/StarSection";
+import CourseDetail from "../components/CourseDetail";
+import TutorDetail from "../components/TutorDetail";
 
 const PublicRoutes = () => {
     return (
@@ -34,6 +36,8 @@ const PublicRoutes = () => {
             <Route path="/becometutor" element={<TutorApplication />} />
             <Route path="/tutors" element={<TutorList />} />
             <Route path="/courses" element={<CourseList />} />
+            <Route path="/course-detail/:id" element={<CourseDetail />} />
+            <Route path="/tutor-detail/:id" element={<TutorDetail />} />
         </Routes>
     );
 };

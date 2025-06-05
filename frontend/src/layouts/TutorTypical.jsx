@@ -3,21 +3,21 @@ import React from "react";
 const tutors = [
     {
         id: 1,
-        name: "Ngô Bá Khá",
+        name: "Cô Giáo Thảo",
         subject: "Lớp Học Ielts",
         rating: 4.9,
         image: "https://via.placeholder.com/150",
     },
     {
         id: 2,
-        name: "Khánh Bầu Trời",
+        name: " Thầy Giáo Khánh",
         subject: "Lớp Học Toeic",
         rating: 4.8,
         image: "https://via.placeholder.com/150",
     },
     {
         id: 3,
-        name: "Bùi Xuân Huấn",
+        name: "Thầy Giáo Huấn",
         subject: "Giao Tiếp Tiếng Anh",
         rating: 5.0,
         image: "",

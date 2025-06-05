@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const coursesData = [
     {
@@ -29,53 +30,11 @@ const coursesData = [
         students: 40,
         description: "Học ngữ pháp tiếng Anh chuyên sâu dễ hiểu.",
     },
-    {
-        id: 5,
-        title: "Luyện phát âm",
-        instructor: "Phạm Thu E",
-        students: 32,
-        description: "Khóa học chỉnh phát âm chuẩn như người bản xứ.",
-    },
-    {
-        id: 6,
-        title: "Viết học thuật",
-        instructor: "Vũ Minh F",
-        students: 29,
-        description: "Hướng dẫn viết luận và nghiên cứu khoa học.",
-    },
-    {
-        id: 7,
-        title: "Tiếng Anh trẻ em",
-        instructor: "Bùi Hải G",
-        students: 33,
-        description: "Khóa học tiếng Anh thú vị cho trẻ từ 5-12 tuổi.",
-    },
-    {
-        id: 8,
-        title: "Chứng chỉ quốc tế",
-        instructor: "Đỗ Văn H",
-        students: 27,
-        description: "Luyện thi các chứng chỉ như TOEFL, SAT, GMAT.",
-    },
-    {
-        id: 9,
-        title: "Tiếng Anh thương mại",
-        instructor: "Nguyễn Thị I",
-        students: 45,
-        description: "Tiếng Anh dành cho công việc và kinh doanh.",
-    },
-    {
-        id: 10,
-        title: "Luyện nghe nâng cao",
-        instructor: "Trần Văn J",
-        students: 38,
-        description: "Khóa học giúp bạn nghe tiếng Anh tốt hơn.",
-    },
 ];
 
 const CourseList = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const coursesPerPage = 8;
+    const coursesPerPage = 4;
     const totalPages = Math.ceil(coursesData.length / coursesPerPage);
 
     const lastIndex = currentPage * coursesPerPage;
@@ -106,12 +65,19 @@ const CourseList = () => {
                             <p className="text-[#000080] font-medium">
                                 {course.description}
                             </p>
+
+                            <Link
+                                to={`/course-detail/${course.id}`}
+                                className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-yellow-600 transition inline-block"
+                            >
+                                Xem chi tiết
+                            </Link>
                         </div>
                     ))}
                 </div>
             </div>
 
-            {/* Phân trang số */}
+            {/* Phân trang */}
             <div className="flex justify-center mt-6 space-x-3">
                 <button
                     onClick={() => setCurrentPage(currentPage - 1)}
