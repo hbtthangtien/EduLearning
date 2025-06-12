@@ -4,16 +4,20 @@ import {
     FaBookOpen,
     FaGraduationCap,
     FaClock,
-} from "react-icons/fa"; // Import icon từ react-icons
+} from "react-icons/fa";
+import backgroundImage from "../assest/6.jpg"; // 📂 Đảm bảo đường dẫn đúng
 
 const CourseDetail = () => {
     return (
-        <div className="bg-[#000080] text-white min-h-screen flex flex-col items-center py-12 px-6">
+        <div
+            className="text-white min-h-screen flex flex-col items-center py-12 px-6 bg-cover bg-center bg-fixed"
+            style={{ backgroundImage: `url(${backgroundImage})` }} // ✅ Đặt ảnh nền
+        >
             {/* Tiêu đề khóa học */}
             <h1 className="text-5xl font-bold mb-6">Chi tiết khóa học</h1>
 
             {/* Nội dung khóa học */}
-            <div className="bg-white text-[#000080] p-6 rounded-lg shadow-lg max-w-4xl w-full">
+            <div className="bg-white bg-opacity-80 text-[#000080] p-6 rounded-lg shadow-lg max-w-4xl w-full">
                 <h2 className="text-3xl font-semibold flex items-center gap-3">
                     <FaGraduationCap /> IELTS Cấp tốc 7.5+
                 </h2>

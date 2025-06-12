@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import backgroundImage from "../assest/4.jpg";
 const ContactForm = () => {
     const [formData, setFormData] = useState({
         name: "",
@@ -18,8 +18,10 @@ const ContactForm = () => {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100 p-10">
-            {/* Layout */}
+        <div
+            className="flex justify-center items-center min-h-screen bg-cover bg-center bg-fixed p-10"
+            style={{ backgroundImage: `url(${backgroundImage})` }} // ✅ Đặt ảnh nền
+        >
             <div className="flex flex-wrap w-full max-w-5xl bg-white p-8 rounded-lg shadow-lg">
                 {/* Form Liên hệ */}
                 <div className="w-full md:w-1/2 p-6">

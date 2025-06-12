@@ -5,21 +5,21 @@ const tutors = [
         id: 1,
         name: "Cô Giáo Thảo",
         subject: "Lớp Học Ielts",
-        rating: 4.9,
+
         image: "https://via.placeholder.com/150",
     },
     {
         id: 2,
         name: " Thầy Giáo Khánh",
         subject: "Lớp Học Toeic",
-        rating: 4.8,
+
         image: "https://via.placeholder.com/150",
     },
     {
         id: 3,
         name: "Thầy Giáo Huấn",
         subject: "Giao Tiếp Tiếng Anh",
-        rating: 5.0,
+
         image: "",
     },
 ];
@@ -39,7 +39,6 @@ const TutorTypical = () => {
                     />
                     <h2 className="text-xl font-semibold mt-4">{tutor.name}</h2>
                     <p className="text-gray-600">{tutor.subject}</p>
-                    <p className="text-yellow-500">⭐ {tutor.rating}</p>
                     <button className="mt-4 bg-[#000080] text-white px-4 py-2 rounded-lg hover:bg-[#000060] transition">
                         Xem chi tiết
                     </button>
