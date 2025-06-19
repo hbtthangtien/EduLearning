@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useUserId } from "../../hooks/useUserId";
 import {
     FaChalkboardTeacher,
     FaUserGraduate,
@@ -9,6 +10,45 @@ import {
 } from "react-icons/fa";
 
 const TutorDashboard = () => {
+    const { id, loading, error } = useUserId();
+    const [dashboard, setDashboard] = useState(null);
+    const [dashLoading, setDashLoading] = useState(true);
+    const [dashError, setDashError] = useState("");
+    
+    useEffect(() => {
+        if (!id) return;
+        const fetchDashboard = async () => {
+            try {
+                const res = await fetch(
+                    `https://localhost:7211/api/tutors/${id}/dashboard`
+                );
+                if (!res.ok) throw new Error(`Lỗi ${res.message}`);
+                const { data } = await res.json();
+                setDashboard(data);
+            } catch (err) {
+                setDashError(err.message);
+            } finally {
+                setDashLoading(false);
+            }
+        };
+        fetchDashboard();
+    }, [id]);
+
+    if (dashLoading) {
+        return (
+            <div className="text-white text-center mt-20">
+                Đang thống kê dữ liệu....
+            </div>
+        );
+    }
+
+    if (dashError) {
+        return (
+            <div className="text-red-600 text-center mt-20">
+                Có lỗi xảy ra: {dashError}
+            </div>
+        );
+    }
     return (
         <div className="flex-grow p-10 bg-gray-100">
             <h1 className="text-4xl font-bold text-[#000080] text-center mb-6">
@@ -23,14 +63,14 @@ const TutorDashboard = () => {
                         <h2 className="text-xl font-semibold">
                             Tổng số lớp học
                         </h2>
-                        <p className="text-3xl font-bold text-[#000080]">5</p>
+                        <p className="text-3xl font-bold text-[#000080]">{dashboard.slots}</p>
                     </div>
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-lg flex items-center gap-4">
                     <FaUserGraduate className="text-[#000080] text-3xl" />
                     <div>
                         <h2 className="text-xl font-semibold">Số học viên</h2>
-                        <p className="text-3xl font-bold text-[#000080]">50+</p>
+                        <p className="text-3xl font-bold text-[#000080]">{dashboard.totalStudents}</p>
                     </div>
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-lg flex items-center gap-4">
@@ -39,7 +79,7 @@ const TutorDashboard = () => {
                         <h2 className="text-xl font-semibold">
                             Tin nhắn chưa đọc
                         </h2>
-                        <p className="text-3xl font-bold text-red-500">3</p>
+                        <p className="text-3xl font-bold text-red-500">{dashboard.totalNewMessage}</p>
                     </div>
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-lg flex items-center gap-4">
@@ -49,7 +89,7 @@ const TutorDashboard = () => {
                             Doanh thu tháng này
                         </h2>
                         <p className="text-3xl font-bold text-green-500">
-                            20,000,000 VNĐ
+                            {dashboard.incomePerMonth} VNĐ
                         </p>
                     </div>
                 </div>
@@ -60,7 +100,7 @@ const TutorDashboard = () => {
                             Đánh giá trung bình
                         </h2>
                         <p className="text-3xl font-bold text-yellow-500">
-                            4.8 ★
+                            {dashboard.overalls} ★
                         </p>
                     </div>
                 </div>
@@ -72,8 +112,10 @@ const TutorDashboard = () => {
                     <FaCalendarAlt /> Lịch dạy sắp tới
                 </h2>
                 <ul className="mt-3 list-disc list-inside text-lg">
-                    <li>📅 12/06/2025 - 09:00 - 10:30 | IELTS Cấp tốc</li>
-                    <li>📅 13/06/2025 - 14:00 - 15:30 | TOEIC 750+</li>
+                    {dashboard.upcomingSchedules.map((item, index) => (
+                        <li key={index}>📅 {item}</li>
+                    ))}
+
                 </ul>
             </div>
 
