@@ -1,10 +1,10 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Routes } from "react-router-dom";
 import Navbar from "./layouts/Navbar";
 import Footer from "./layouts/Footer";
-import PublicRoutes from "./routes/PublicRoutes";
-import AdminRoutes from "./routes/AdminRoutes";
-import TutorRoutes from "./routes/TutorRoutes";
+import { getPublicRoutes } from "./routes/PublicRoutes";
+import { getAdminRoutes } from "./routes/AdminRoutes";
+import { getTutorRoutes } from "./routes/TutorRoutes";
 
 const App = () => {
     return (
@@ -12,9 +12,11 @@ const App = () => {
             <div className="flex flex-col min-h-screen">
                 <Navbar />
                 <div className="flex-grow mt-20">
-                    <PublicRoutes />
-                    <AdminRoutes />
-                    <TutorRoutes />
+                    <Routes>
+                        {getPublicRoutes()}
+                        {getAdminRoutes()}
+                        {getTutorRoutes()}
+                    </Routes>
                 </div>
                 <Footer />
             </div>

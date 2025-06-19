@@ -6,7 +6,7 @@ import {
     FaCalendarAlt,
     FaEnvelope,
     FaEdit,
-    FaHome,
+    FaPlusCircle,
 } from "react-icons/fa";
 
 const TutorSidebar = () => {
@@ -20,6 +20,12 @@ const TutorSidebar = () => {
                     className="flex items-center gap-3 hover:bg-[#000060] p-2 rounded-lg"
                 >
                     <FaChalkboardTeacher /> Quản lý lớp học
+                </Link>
+                <Link
+                    to="/tutor/create-class"
+                    className="flex items-center gap-3 hover:bg-[#000060] p-2 rounded-lg"
+                >
+                    <FaPlusCircle /> Tạo lớp học
                 </Link>
                 <Link
                     to="/tutor/students"

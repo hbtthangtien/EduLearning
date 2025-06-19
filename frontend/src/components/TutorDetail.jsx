@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import backgroundImage from "../assest/5.jpg"; // 📂 Đảm bảo đường dẫn đúng
+import backgroundImage from "../assest/5.jpg";
 
 const tutorsData = [
     {
@@ -30,7 +30,7 @@ const TutorDetail = () => {
     return (
         <div
             className="p-10 min-h-screen flex flex-col items-center bg-cover bg-center bg-fixed"
-            style={{ backgroundImage: `url(${backgroundImage})` }} // ✅ Đặt ảnh nền
+            style={{ backgroundImage: `url(${backgroundImage})` }}
         >
             <h1 className="text-4xl font-bold text-[#000080]">
                 Chi tiết Gia sư

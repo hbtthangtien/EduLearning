@@ -1,54 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { FaUserGraduate, FaStar, FaBookOpen } from "react-icons/fa";
 import backgroundImage from "../assest/2.jpg";
 
-const tutorsData = [
-    {
-        id: 1,
-        name: "Nguyễn Văn A",
-        age: 30,
-        bio: "Gia sư IELTS với 5 năm kinh nghiệm.",
-        specialty: "IELTS",
-        rating: 4.5,
-    },
-    {
-        id: 2,
-        name: "Trần Thị B",
-        age: 28,
-        bio: "Chuyên gia luyện TOEIC cấp tốc.",
-        specialty: "TOEIC",
-        rating: 4.7,
-    },
-    {
-        id: 3,
-        name: "Lê Văn C",
-        age: 35,
-        bio: "Giảng viên tiếng Anh giao tiếp.",
-        specialty: "Giao tiếp tiếng Anh",
-        rating: 4.3,
-    },
-    {
-        id: 4,
-        name: "Hoàng Gia D",
-        age: 40,
-        bio: "Chuyên sâu về ngữ pháp tiếng Anh.",
-        specialty: "Ngữ pháp",
-        rating: 4.9,
-    },
-];
-
 const TutorList = () => {
-    const [currentPage, setCurrentPage] = useState(1);
+    const [tutors, setTutors] = useState([]);
     const [selectedSpecialty, setSelectedSpecialty] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
     const tutorsPerPage = 4;
-    const totalPages = Math.ceil(tutorsData.length / tutorsPerPage);
 
+    useEffect(() => {
+        const fetchTutors = async () => {
+            try {
+                const res = await fetch("https://localhost:7211/api/tutors");
+                if (!res.ok) throw new Error(`Lỗi: ${res.status}`);
+                const data = await res.json();
+                setTutors(data);
+            } catch (err) {
+                console.error("❌ Lỗi khi fetch tutors:", err.message);
+            }
+        };
+
+        fetchTutors();
+    }, []);
+
+    // 🔍 Filtered tutors
+    const filteredTutors = useMemo(() => {
+        if (!selectedSpecialty) return tutors;
+        return tutors.filter(
+            (tutor) =>
+                tutor.specializations &&
+                tutor.specializations[0]?.toLowerCase() ===
+                    selectedSpecialty.toLowerCase()
+        );
+    }, [tutors, selectedSpecialty]);
+
+    const totalPages = Math.ceil(filteredTutors.length / tutorsPerPage);
     const lastIndex = currentPage * tutorsPerPage;
     const firstIndex = lastIndex - tutorsPerPage;
-    const filteredTutors = selectedSpecialty
-        ? tutorsData.filter((tutor) => tutor.specialty === selectedSpecialty)
-        : tutorsData;
     const currentTutors = filteredTutors.slice(firstIndex, lastIndex);
 
     return (
@@ -56,31 +45,30 @@ const TutorList = () => {
             className="flex min-h-screen bg-cover bg-center bg-fixed"
             style={{ backgroundImage: `url(${backgroundImage})` }}
         >
-            {/* 🏆 Sidebar */}
+            {/* Sidebar */}
             <aside className="w-1/8 bg-white p-6 shadow-lg">
                 <h2 className="text-2xl font-bold text-[#000080]">
                     🔎 Lọc Gia Sư
                 </h2>
-
-                {/* Bộ lọc theo chuyên ngành */}
                 <div className="mt-4">
                     <h3 className="font-semibold">Theo chuyên ngành:</h3>
                     <select
                         className="w-full p-2 border rounded-lg mt-2"
-                        onChange={(e) => setSelectedSpecialty(e.target.value)}
+                        onChange={(e) => {
+                            setSelectedSpecialty(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                        value={selectedSpecialty}
                     >
                         <option value="">Tất cả</option>
                         <option value="IELTS">IELTS</option>
                         <option value="TOEIC">TOEIC</option>
-                        <option value="Giao tiếp tiếng Anh">
-                            Giao tiếp tiếng Anh
-                        </option>
-                        <option value="Ngữ pháp">Ngữ pháp</option>
+                        <option value="Giao Tiếp">Giao Tiếp</option>
                     </select>
                 </div>
             </aside>
 
-            {/* 🏆 Danh sách gia sư */}
+            {/* Danh sách gia sư */}
             <div className="w-3/4 p-10 flex flex-col items-center">
                 <h1 className="text-4xl font-bold text-[#000080] text-center mb-6">
                     Danh sách Gia sư
@@ -94,18 +82,16 @@ const TutorList = () => {
                         >
                             <FaUserGraduate className="text-[#000080] text-6xl mb-3" />
                             <h2 className="text-2xl font-semibold">
-                                {tutor.name}
+                                {tutor.fullName}
                             </h2>
-                            <p className="text-gray-600">Tuổi: {tutor.age}</p>
-                            <p className="text-gray-600">{tutor.bio}</p>
+                            <p className="text-gray-600">{tutor.introduces}</p>
                             <p className="text-[#000080] font-medium flex items-center gap-2">
-                                <FaBookOpen /> {tutor.specialty}
+                                <FaBookOpen /> {tutor.specializations?.[0]}
                             </p>
                             <p className="text-yellow-500 flex items-center gap-2">
                                 <FaStar /> {tutor.rating} ★
                             </p>
 
-                            {/* Nút xem chi tiết */}
                             <Link
                                 to={`/tutor-detail/${tutor.id}`}
                                 className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-yellow-600 transition inline-block"
@@ -119,7 +105,7 @@ const TutorList = () => {
                 {/* Phân trang */}
                 <div className="flex justify-center mt-6 space-x-3">
                     <button
-                        onClick={() => setCurrentPage(currentPage - 1)}
+                        onClick={() => setCurrentPage((p) => p - 1)}
                         disabled={currentPage === 1}
                         className={`px-3 py-2 rounded-lg ${
                             currentPage === 1
@@ -143,7 +129,7 @@ const TutorList = () => {
                         </button>
                     ))}
                     <button
-                        onClick={() => setCurrentPage(currentPage + 1)}
+                        onClick={() => setCurrentPage((p) => p + 1)}
                         disabled={currentPage === totalPages}
                         className={`px-3 py-2 rounded-lg ${
                             currentPage === totalPages

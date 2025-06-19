@@ -1,42 +1,94 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { refreshAccessToken } from "../../services/api";
 
 const Dashboard = () => {
+    const [stats, setStats] = useState({
+        totalUsers: 0,
+        totalCourses: 0,
+        monthlyRevenue: 0,
+        recentCourses: [],
+    });
+    const [message, setMessage] = useState("");
+
+    useEffect(() => {
+        const fetchDashboard = async (retry = false) => {
+            try {
+                let token = localStorage.getItem("token");
+                if (!token) {
+                    setMessage("❌ Bạn chưa đăng nhập.");
+                    return;
+                }
+
+                const res = await fetch(
+                    "https://localhost:7211/api/admin/users/dashboard",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                if (res.status === 401 && !retry) {
+                    const newToken = await refreshAccessToken();
+                    localStorage.setItem("token", newToken);
+                    return fetchDashboard(true);
+                }
+
+                if (res.status === 403) {
+                    setMessage("❌ Bạn không có quyền truy cập.");
+                    return;
+                }
+
+                if (!res.ok) {
+                    setMessage(`❌ Lỗi: ${res.status}`);
+                    return;
+                }
+
+                const data = await res.json();
+                setStats(data);
+            } catch (err) {
+                console.error("❌ Lỗi API:", err);
+                setMessage("❌ Không thể kết nối máy chủ.");
+            }
+        };
+
+        fetchDashboard();
+    }, []);
+
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
+            {message && (
+                <p className="text-center text-red-600 font-medium mb-4">
+                    {message}
+                </p>
+            )}
+
             {/* Thống kê nhanh */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white p-6 rounded-lg shadow-lg text-center">
                     <h2 className="text-xl font-semibold text-[#000080]">
                         Tổng Số Người Dùng
                     </h2>
-                    <p className="text-gray-600 text-3xl font-bold">120</p>
+                    <p className="text-gray-600 text-3xl font-bold">
+                        {stats.totalUsers}
+                    </p>
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-lg text-center">
                     <h2 className="text-xl font-semibold text-[#000080]">
                         Tổng số Lớp Học
                     </h2>
-                    <p className="text-gray-600 text-3xl font-bold">15</p>
+                    <p className="text-gray-600 text-3xl font-bold">
+                        {stats.totalCourses}
+                    </p>
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-lg text-center">
                     <h2 className="text-xl font-semibold text-[#000080]">
                         Doanh Thu Tháng này
                     </h2>
                     <p className="text-gray-600 text-3xl font-bold">
-                        75,000,000 VND
+                        {stats.monthlyRevenue.toLocaleString()} VND
                     </p>
                 </div>
-            </div>
-
-            {/* Biểu đồ doanh thu */}
-            <div className="bg-white p-6 rounded-lg shadow-lg mt-8">
-                <h2 className="text-xl font-semibold text-[#000080] text-center">
-                    Doanh thu theo tháng
-                </h2>
-                <img
-                    src="/assets/revenue-chart.png"
-                    alt="Biểu đồ doanh thu"
-                    className="w-full h-64 mt-4 rounded-lg"
-                />
             </div>
 
             {/* Danh sách khóa học */}
@@ -53,16 +105,20 @@ const Dashboard = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className="bg-white hover:bg-gray-100">
-                            <td className="p-3 border">IELTS Cấp tốc</td>
-                            <td className="p-3 border">Bùi Xuân Huấn</td>
-                            <td className="p-3 border">50</td>
-                        </tr>
-                        <tr className="bg-white hover:bg-gray-100">
-                            <td className="p-3 border">TOEIC 750+</td>
-                            <td className="p-3 border">Đoàn Di Băng</td>
-                            <td className="p-3 border">30</td>
-                        </tr>
+                        {stats.recentCourses.map((course, index) => (
+                            <tr
+                                key={index}
+                                className="bg-white hover:bg-gray-100"
+                            >
+                                <td className="p-3 border">{course.title}</td>
+                                <td className="p-3 border">
+                                    {course.tutorName}
+                                </td>
+                                <td className="p-3 border">
+                                    {course.studentCount}
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>

@@ -23,17 +23,12 @@ const Sidebar = () => {
                 >
                     Quản lý Lớp Học
                 </Link>
-                <Link
-                    to="/admin/reports"
-                    className="block py-2 px-4 rounded-lg hover:bg-[#000060]"
-                >
-                    Thống kê & Báo cáo
-                </Link>
+
                 <Link
                     to="/admin/approve"
                     className="block py-2 px-4 rounded-lg hover:bg-[#000060]"
                 >
-                    Duyệt Đơn Gia Sư
+                    Duyệt Đơn Lớp Học
                 </Link>
             </nav>
         </div>

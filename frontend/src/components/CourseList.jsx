@@ -1,81 +1,71 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import backgroundImage from "../assest/3.jpg"; // 📂 Đảm bảo đường dẫn đúng
-
-const coursesData = [
-    {
-        id: 1,
-        title: "IELTS Cấp tốc",
-        instructor: "Nguyễn Văn A",
-        students: 50,
-        description: "Luyện thi IELTS cấp tốc với lộ trình chuẩn.",
-    },
-    {
-        id: 2,
-        title: "TOEIC 750+",
-        instructor: "Trần Thị B",
-        students: 30,
-        description: "Khóa học giúp bạn đạt tối thiểu 750+ TOEIC.",
-    },
-    {
-        id: 3,
-        title: "Giao tiếp Tiếng Anh",
-        instructor: "Lê Văn C",
-        students: 75,
-        description: "Rèn luyện kỹ năng giao tiếp tiếng Anh tự tin.",
-    },
-    {
-        id: 4,
-        title: "Ngữ pháp nâng cao",
-        instructor: "Hoàng Gia D",
-        students: 40,
-        description: "Học ngữ pháp tiếng Anh chuyên sâu dễ hiểu.",
-    },
-];
+import backgroundImage from "../assest/3.jpg";
 
 const CourseList = () => {
+    const [courses, setCourses] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedInstructor, setSelectedInstructor] = useState("");
     const coursesPerPage = 4;
-    const totalPages = Math.ceil(coursesData.length / coursesPerPage);
 
-    const lastIndex = currentPage * coursesPerPage;
-    const firstIndex = lastIndex - coursesPerPage;
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const res = await fetch("https://localhost:7211/api/courses");
+                const data = await res.json();
+                setCourses(data);
+            } catch (err) {
+                console.error("❌ Lỗi khi tải courses:", err);
+            }
+        };
+        fetchCourses();
+    }, []);
+
     const filteredCourses = selectedInstructor
-        ? coursesData.filter(
-              (course) => course.instructor === selectedInstructor
-          )
-        : coursesData;
-    const currentCourses = filteredCourses.slice(firstIndex, lastIndex);
+        ? courses.filter((course) => course.tutorName === selectedInstructor)
+        : courses;
+
+    const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
+    const firstIndex = (currentPage - 1) * coursesPerPage;
+    const currentCourses = filteredCourses.slice(
+        firstIndex,
+        firstIndex + coursesPerPage
+    );
+
+    // 🧑 Lấy danh sách giảng viên duy nhất từ courses
+    const uniqueTutors = [...new Set(courses.map((c) => c.tutorName))];
 
     return (
         <div
             className="flex min-h-screen bg-cover bg-center bg-fixed"
             style={{ backgroundImage: `url(${backgroundImage})` }}
         >
-            {/* 🏆 Sidebar */}
+            {/* Sidebar lọc */}
             <aside className="w-1/6 bg-white p-6 shadow-lg">
                 <h2 className="text-2xl font-bold text-[#000080]">
                     🔎 Lọc Khóa Học
                 </h2>
-
-                {/* Bộ lọc theo giảng viên */}
                 <div className="mt-4">
                     <h3 className="font-semibold">Theo Giảng Viên:</h3>
                     <select
                         className="w-full p-2 border rounded-lg mt-2"
-                        onChange={(e) => setSelectedInstructor(e.target.value)}
+                        value={selectedInstructor}
+                        onChange={(e) => {
+                            setCurrentPage(1);
+                            setSelectedInstructor(e.target.value);
+                        }}
                     >
                         <option value="">Tất cả</option>
-                        <option value="Nguyễn Văn A">Nguyễn Văn A</option>
-                        <option value="Trần Thị B">Trần Thị B</option>
-                        <option value="Lê Văn C">Lê Văn C</option>
-                        <option value="Hoàng Gia D">Hoàng Gia D</option>
+                        {uniqueTutors.map((tutor, index) => (
+                            <option key={index} value={tutor}>
+                                {tutor}
+                            </option>
+                        ))}
                     </select>
                 </div>
             </aside>
 
-            {/* 🏆 Danh sách khóa học */}
+            {/* Danh sách khóa học */}
             <div className="w-5/6 p-10 flex flex-col">
                 <h1 className="text-3xl font-bold text-[#000080] text-center">
                     Danh sách Lớp học
@@ -91,10 +81,10 @@ const CourseList = () => {
                                 {course.title}
                             </h2>
                             <p className="text-gray-600">
-                                Giảng viên: {course.instructor}
+                                Giảng viên: {course.tutorName}
                             </p>
                             <p className="text-gray-600">
-                                Học viên: {course.students}
+                                Học viên: {course.studentCount}
                             </p>
                             <p className="text-[#000080] font-medium">
                                 {course.description}
@@ -113,7 +103,7 @@ const CourseList = () => {
                 {/* Phân trang */}
                 <div className="flex justify-center mt-6 space-x-3">
                     <button
-                        onClick={() => setCurrentPage(currentPage - 1)}
+                        onClick={() => setCurrentPage((prev) => prev - 1)}
                         disabled={currentPage === 1}
                         className={`px-3 py-2 rounded-lg ${
                             currentPage === 1
@@ -125,7 +115,7 @@ const CourseList = () => {
                     </button>
                     {[...Array(totalPages)].map((_, index) => (
                         <button
-                            key={index + 1}
+                            key={index}
                             onClick={() => setCurrentPage(index + 1)}
                             className={`px-4 py-2 rounded-lg ${
                                 currentPage === index + 1
@@ -137,7 +127,7 @@ const CourseList = () => {
                         </button>
                     ))}
                     <button
-                        onClick={() => setCurrentPage(currentPage + 1)}
+                        onClick={() => setCurrentPage((prev) => prev + 1)}
                         disabled={currentPage === totalPages}
                         className={`px-3 py-2 rounded-lg ${
                             currentPage === totalPages
