@@ -54,7 +54,12 @@ const LoginForm = () => {
                     "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
                 ];
             localStorage.setItem("name", name);
-
+            const id =
+                decoded.id ||
+                decoded[
+                    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+                ];
+            localStorage.setItem("senderId", id);
             if (!role) {
                 throw new Error("Không tìm thấy vai trò trong token");
             }
