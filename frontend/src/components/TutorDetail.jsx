@@ -1,31 +1,22 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import backgroundImage from "../assest/5.jpg";
+import ChatBox from "../components/ChatBox";
 
 const tutorsData = [
-    {
-        id: 1,
-        name: "Nguyễn Văn A",
-        age: 30,
-        bio: "Gia sư IELTS với 5 năm kinh nghiệm.",
-        specialty: "IELTS",
-        experience: "5 năm giảng dạy IELTS tại trung tâm ABC.",
-    },
-    {
-        id: 2,
-        name: "Trần Thị B",
-        age: 28,
-        bio: "Chuyên gia luyện TOEIC cấp tốc.",
-        specialty: "TOEIC",
-        experience: "Đào tạo hơn 200 học viên đạt TOEIC 750+.",
-    },
+    /* dữ liệu như cũ */
 ];
 
 const TutorDetail = () => {
     const { id } = useParams();
     const tutor = tutorsData.find((t) => t.id === parseInt(id));
     const [showChat, setShowChat] = useState(false);
-    const [message, setMessage] = useState("");
+    const [messages, setMessages] = useState([]);
+    const student = { name: "Học viên A" };
+
+    const handleSend = (msg) => {
+        setMessages((prev) => [...prev, msg]);
+    };
 
     return (
         <div
@@ -46,7 +37,6 @@ const TutorDetail = () => {
                     </p>
                     <p className="text-gray-600 mt-4">{tutor.experience}</p>
 
-                    {/* Nút Gửi tin nhắn */}
                     <button
                         onClick={() => setShowChat(true)}
                         className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-yellow-600 transition"
@@ -54,29 +44,16 @@ const TutorDetail = () => {
                         Gửi tin nhắn
                     </button>
 
-                    {/* Cửa sổ chat */}
                     {showChat && (
                         <div className="mt-6 bg-gray-100 p-4 rounded-lg shadow-md w-full">
-                            <h3 className="text-xl font-semibold text-[#000080]">
+                            <h3 className="text-xl font-semibold text-[#000080] mb-2">
                                 Chat với {tutor.name}
                             </h3>
-                            <textarea
-                                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#000080] mt-3"
-                                rows="4"
-                                placeholder="Nhập tin nhắn của bạn..."
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                            ></textarea>
-                            <button
-                                onClick={() =>
-                                    alert(
-                                        `Tin nhắn gửi đến ${tutor.name}: ${message}`
-                                    )
-                                }
-                                className="mt-3 bg-[#000080] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#000060] transition"
-                            >
-                                Gửi
-                            </button>
+                            <ChatBox
+                                user={student}
+                                messages={messages}
+                                onSend={handleSend}
+                            />
                             <button
                                 onClick={() => setShowChat(false)}
                                 className="mt-3 bg-gray-400 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-500 transition"

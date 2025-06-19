@@ -36,7 +36,7 @@ const TutorTypical = () => {
                     className="bg-white p-6 rounded-lg shadow-lg text-center hover:shadow-xl transition"
                 >
                     <img
-                        src={"https://via.placeholder.com/150"}
+                        src={"https://www.pinterest.com/pin/1900024838434063/"}
                         alt={tutor.fullName}
                         className="w-24 h-24 rounded-full mx-auto border-4 border-[#000080]"
                     />

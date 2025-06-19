@@ -1,13 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import logogiasu from "../assest/giasu.jpg";
+import logotutor from "../assest/tutor.jpg";
 const BecomeTutorSection = () => {
     return (
         <div className="flex flex-col md:flex-row items-center justify-between bg-[#000080] text-white py-20 px-6 rounded-lg shadow-lg">
             {/* Ảnh gia sư - Bên trái */}
             <div className="w-full md:w-1/2 flex justify-center">
                 <img
-                    src={logogiasu}
+                    src={logotutor}
                     alt="Gia sư chuyên nghiệp"
                     className="w-80 h-80 rounded-lg shadow-lg object-cover"
                 />
