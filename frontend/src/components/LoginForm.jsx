@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import backgroundImage from "../assest/8.jpg";
 import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../context/AuthContext";
 
 const LoginForm = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -24,7 +26,6 @@ const LoginForm = () => {
             );
 
             const data = await response.json();
-            console.log("🧾 Phản hồi từ API:", data);
 
             if (!data.success) {
                 throw new Error(data.message || "Đăng nhập thất bại");
@@ -37,11 +38,6 @@ const LoginForm = () => {
                 throw new Error("Thiếu token từ phản hồi");
             }
 
-            //  Lưu token vào localStorage
-            localStorage.setItem("token", accessToken);
-            localStorage.setItem("refreshToken", refreshToken);
-
-            //  Giải mã để lấy thông tin user
             const decoded = jwtDecode(accessToken);
             const role =
                 decoded.role ||
@@ -53,28 +49,31 @@ const LoginForm = () => {
                 decoded[
                     "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
                 ];
-            localStorage.setItem("name", name);
             const id =
                 decoded.id ||
                 decoded[
                     "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
                 ];
-            localStorage.setItem("senderId", id);
-            if (!role) {
-                throw new Error("Không tìm thấy vai trò trong token");
-            }
 
-            console.log("👤 Vai trò người dùng:", role);
+            const user = {
+                id: Number(id),
+                name,
+                role,
+                token: accessToken,
+            };
+
+            //  Gọi login từ context để cập nhật user + localStorage
+            login(user);
+            localStorage.setItem("refreshToken", refreshToken);
+
+            //  Điều hướng theo role
             const normalizedRole = role.toLowerCase();
-
             if (normalizedRole === "admin") {
                 navigate("/admin");
             } else if (normalizedRole === "tutor") {
                 navigate("/tutor");
-            } else if (normalizedRole === "student") {
-                navigate("/");
             } else {
-                setError("Không xác định được vai trò người dùng");
+                navigate("/");
             }
         } catch (err) {
             console.error("❌ Lỗi đăng nhập:", err.message);

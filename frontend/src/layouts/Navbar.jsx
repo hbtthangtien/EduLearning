@@ -1,15 +1,14 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assest/logoedusync.png";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
     const navigate = useNavigate();
-    const token = localStorage.getItem("token");
-    const name = localStorage.getItem("name");
+    const { user, logout } = useAuth();
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("name");
+        logout();
         navigate("/login");
     };
 
@@ -53,10 +52,10 @@ const Navbar = () => {
 
             {/* Auth Section */}
             <div className="space-x-3">
-                {token ? (
+                {user ? (
                     <>
                         <span className="text-white font-medium">
-                            Hello, {name}
+                            Hello, {user.name}
                         </span>
                         <button
                             onClick={handleLogout}

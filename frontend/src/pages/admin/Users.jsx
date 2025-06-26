@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { refreshAccessToken } from "../../services/api";
+import { fetchWithAuth, refreshAccessToken } from "../../services/api";
 
 const Users = () => {
     const [users, setUsers] = useState([]);
@@ -13,10 +13,8 @@ const Users = () => {
                 return;
             }
 
-            const res = await fetch("https://localhost:7211/api/admin/users", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+            const res = await fetchWithAuth("/api/admin/users", {
+                headers: { Authorization: `Bearer ${token}` },
             });
 
             if (res.status === 401 && !retry) {
@@ -24,9 +22,9 @@ const Users = () => {
                     const newToken = await refreshAccessToken();
                     if (newToken) {
                         localStorage.setItem("token", newToken);
-                        return fetchUsers(true); // Retry
+                        return fetchUsers(true);
                     }
-                } catch (err) {
+                } catch {
                     setMessage("❌ Token hết hạn. Vui lòng đăng nhập lại.");
                     return;
                 }
@@ -55,32 +53,20 @@ const Users = () => {
     }, [fetchUsers]);
 
     const handleDelete = async (userId, retry = false) => {
-        const confirm = window.confirm("Bạn có chắc muốn xóa người dùng này?");
-        if (!confirm) return;
+        if (!window.confirm("Bạn có chắc muốn xóa người dùng này?")) return;
 
         try {
             let token = localStorage.getItem("token");
-
-            const res = await fetch(
-                `https://localhost:7211/api/admin/users/${userId}`,
-                {
-                    method: "DELETE",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const res = await fetchWithAuth(`/api/admin/users/${userId}`, {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` },
+            });
 
             if (res.status === 401 && !retry) {
-                try {
-                    const newToken = await refreshAccessToken();
-                    if (newToken) {
-                        localStorage.setItem("token", newToken);
-                        return handleDelete(userId, true);
-                    }
-                } catch (err) {
-                    setMessage("❌ Phiên đăng nhập đã hết hạn.");
-                    return;
+                const newToken = await refreshAccessToken();
+                if (newToken) {
+                    localStorage.setItem("token", newToken);
+                    return handleDelete(userId, true);
                 }
             }
 
@@ -103,51 +89,65 @@ const Users = () => {
     };
 
     return (
-        <div className="p-6">
-            <h1 className="text-3xl font-bold text-[#000080]">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+            <h1 className="text-3xl font-bold text-[#000080] mb-6 text-center">
                 Quản lý Người dùng
             </h1>
 
             {message && (
-                <p className="text-red-600 font-medium my-4 text-center">
+                <p className="text-center text-red-600 font-medium mb-4">
                     {message}
                 </p>
             )}
 
-            <table className="w-full mt-6 border-collapse border border-gray-300">
-                <thead>
-                    <tr className="bg-[#000080] text-white">
-                        <th className="p-3 border">ID</th>
-                        <th className="p-3 border">Tên</th>
-                        <th className="p-3 border">Email</th>
-                        <th className="p-3 border">Vai trò</th>
-                        <th className="p-3 border">Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((user) => (
-                        <tr
-                            key={user.id}
-                            className="bg-white hover:bg-gray-100"
-                        >
-                            <td className="p-3 border">{user.id}</td>
-                            <td className="p-3 border">
-                                {user.fullName || user.name}
-                            </td>
-                            <td className="p-3 border">{user.email}</td>
-                            <td className="p-3 border">{user.role}</td>
-                            <td className="p-3 border text-center">
-                                <button
-                                    onClick={() => handleDelete(user.id)}
-                                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                                >
-                                    🗑 Xóa
-                                </button>
-                            </td>
+            <div className="bg-white rounded-xl shadow overflow-x-auto">
+                <table className="min-w-full text-sm text-left">
+                    <thead className="bg-[#000080] text-white">
+                        <tr>
+                            <th className="px-6 py-3 font-medium">ID</th>
+                            <th className="px-6 py-3 font-medium">Tên</th>
+                            <th className="px-6 py-3 font-medium">Email</th>
+                            <th className="px-6 py-3 font-medium">Vai Trò</th>
+                            <th className="px-6 py-3 font-medium text-center">
+                                Hành động
+                            </th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {users.map((user) => (
+                            <tr
+                                key={user.id}
+                                className="border-b hover:bg-gray-50"
+                            >
+                                <td className="px-6 py-4">{user.id}</td>
+                                <td className="px-6 py-4">
+                                    {user.fullName || user.username}
+                                </td>
+                                <td className="px-6 py-4">{user.email}</td>
+                                <td className="px-6 py-4">{user.roleName}</td>
+                                <td className="px-6 py-4 text-center">
+                                    <button
+                                        onClick={() => handleDelete(user.id)}
+                                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-lg shadow-sm transition"
+                                    >
+                                        🗑 Xóa
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                        {users.length === 0 && (
+                            <tr>
+                                <td
+                                    colSpan="4"
+                                    className="px-6 py-4 text-center text-gray-500"
+                                >
+                                    Không có người dùng nào.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };

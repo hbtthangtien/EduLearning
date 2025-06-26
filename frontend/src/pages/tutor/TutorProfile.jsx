@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
+import { fetchWithAuth } from "../../services/api";
 
 const TutorProfile = () => {
     const [profile, setProfile] = useState({
@@ -50,20 +51,17 @@ const TutorProfile = () => {
                 return;
             }
 
-            const response = await fetch(
-                `https://localhost:7211/api/tutors/${userId}/bio`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                        userId: Number(userId),
-                        ...profile,
-                    }),
-                }
-            );
+            const response = await fetchWithAuth(`/api/tutors/${userId}/bio`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    userId: Number(userId),
+                    ...profile,
+                }),
+            });
 
             const result = await response.json();
             if (!response.ok) {

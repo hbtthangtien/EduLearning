@@ -1,89 +1,157 @@
-import React, { useState } from "react";
-
-const applications = [
-    {
-        id: 1,
-        name: "Nguyễn Văn A",
-        email: "nguyenvana@example.com",
-        experience: "3 năm dạy IELTS",
-        certificateUrl: "https://via.placeholder.com/100", // 🖼 Link ảnh giả
-        status: "Chờ duyệt",
-    },
-    {
-        id: 2,
-        name: "Trần Thị B",
-        email: "tranthib@example.com",
-        experience: "2 năm dạy TOEIC",
-        certificateUrl: "https://via.placeholder.com/100",
-        status: "Chờ duyệt",
-    },
-];
+import React, { useEffect, useState } from "react";
+import { fetchWithAuth } from "../../services/api";
 
 const ApproveTutors = () => {
-    const [tutorRequests, setTutorRequests] = useState(applications);
+    const [tutorRequests, setTutorRequests] = useState([]);
+    const [message, setMessage] = useState("");
 
-    const approveTutor = (id) => {
-        setTutorRequests(
-            tutorRequests.map((req) =>
-                req.id === id ? { ...req, status: "Đã duyệt" } : req
-            )
-        );
-        alert("Đã duyệt đơn trở thành Gia sư!");
+    useEffect(() => {
+        fetchPendingTutors();
+    }, []);
+
+    const fetchPendingTutors = async () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            setMessage("❌ Bạn chưa đăng nhập.");
+            return;
+        }
+
+        try {
+            const res = await fetchWithAuth(
+                "/api/admin/users/activation/getall",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (!res.ok) {
+                setMessage("❌ Lỗi khi tải danh sách: " + res.status);
+                return;
+            }
+
+            const data = await res.json();
+            const pending = data.filter((item) => item.isActivated === false);
+            setTutorRequests(pending);
+        } catch (err) {
+            console.error("❌ Lỗi kết nối:", err);
+            setMessage("❌ Không thể kết nối đến máy chủ.");
+        }
+    };
+
+    const approveTutor = async (requestId) => {
+        const token = localStorage.getItem("token");
+
+        try {
+            const res = await fetchWithAuth(
+                "/api/admin/users/activation/approve",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ requestId }),
+                }
+            );
+
+            if (!res.ok) {
+                setMessage("❌ Duyệt thất bại: " + res.status);
+                return;
+            }
+
+            setMessage("✅ Duyệt thành công!");
+            fetchPendingTutors();
+        } catch (err) {
+            console.error("❌ Lỗi khi duyệt:", err);
+            setMessage("❌ Không thể kết nối máy chủ.");
+        }
     };
 
     return (
-        <div className="p-6">
-            <h1 className="text-3xl font-bold text-[#000080] mb-4">
-                Duyệt Đơn Tạo Lớp Học Từ Gia Sư
+        <div className="max-w-7xl mx-auto px-6 py-8">
+            <h1 className="text-4xl font-bold text-center text-indigo-700 mb-10">
+                📑 Danh Sách Đơn Trở Thành Gia Sư
             </h1>
-            <table className="w-full mt-4 border-collapse border border-gray-300">
-                <thead>
-                    <tr className="bg-[#000080] text-white">
-                        <th className="p-3 border">Tên</th>
-                        <th className="p-3 border">Email</th>
-                        <th className="p-3 border">Kinh nghiệm</th>
-                        <th className="p-3 border">Chứng chỉ</th>
-                        <th className="p-3 border">Trạng thái</th>
-                        <th className="p-3 border">Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {tutorRequests.map((req) => (
-                        <tr key={req.id} className="bg-white hover:bg-gray-100">
-                            <td className="p-3 border">{req.name}</td>
-                            <td className="p-3 border">{req.email}</td>
-                            <td className="p-3 border">{req.experience}</td>
-                            <td className="p-3 border text-center">
-                                <a
-                                    href={req.certificateUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <img
-                                        src={
-                                            req.certificateUrl ||
-                                            "https://via.placeholder.com/150"
-                                        }
-                                        alt="Certificate"
-                                        className="w-20 h-auto mx-auto rounded shadow-md hover:scale-105 transition-transform"
-                                    />
-                                </a>
-                            </td>
-                            <td className="p-3 border">{req.status}</td>
-                            <td className="p-3 border text-center">
-                                {req.status === "Chờ duyệt" && (
-                                    <button
-                                        onClick={() => approveTutor(req.id)}
-                                        className="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-700"
-                                    >
-                                        Duyệt
-                                    </button>
-                                )}
-                            </td>
+
+            {message && (
+                <p className="text-center text-red-600 font-medium mb-6">
+                    {message}
+                </p>
+            )}
+
+            <div className="overflow-x-auto">
+                <table className="min-w-full bg-white shadow rounded-xl overflow-hidden border border-gray-200">
+                    <thead>
+                        <tr className="bg-indigo-700 text-white text-sm uppercase">
+                            <th className="px-4 py-3 text-left">Họ tên</th>
+                            <th className="px-4 py-3 text-left">Chuyên môn</th>
+                            <th className="px-4 py-3 text-left">Giới thiệu</th>
+                            <th className="px-4 py-3 text-left">Chứng chỉ</th>
+                            <th className="px-4 py-3 text-center">Hành động</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {tutorRequests.length > 0 ? (
+                            tutorRequests.map((req) => (
+                                <tr
+                                    key={req.requestId}
+                                    className="border-t hover:bg-gray-50"
+                                >
+                                    <td className="px-4 py-3 text-gray-800 font-medium">
+                                        {req.fullname}
+                                    </td>
+                                    <td className="px-4 py-3 text-gray-600">
+                                        {req.specializations}
+                                    </td>
+                                    <td className="px-4 py-3 text-gray-600">
+                                        {req.introduces}
+                                    </td>
+                                    <td className="px-4 py-3 text-gray-600">
+                                        <div className="flex gap-2">
+                                            {req.certificateUrls && (
+                                                <a
+                                                    href={req.certificateUrls}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    <img
+                                                        src={
+                                                            req.certificateUrls
+                                                        }
+                                                        alt="Front Certificate"
+                                                        className="w-24 h-auto rounded shadow hover:scale-105 transition-transform"
+                                                    />
+                                                </a>
+                                            )}
+                                        </div>
+                                    </td>
+                                    <td className="px-4 py-3 text-center">
+                                        <button
+                                            onClick={() =>
+                                                approveTutor(req.requestId)
+                                            }
+                                            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition"
+                                        >
+                                            ✅ Duyệt
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td
+                                    colSpan="5"
+                                    className="text-center text-gray-500 py-6"
+                                >
+                                    Không có đơn nào chờ duyệt.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };

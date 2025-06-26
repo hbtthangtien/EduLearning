@@ -2,6 +2,7 @@ import { FaCalendarAlt } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useUserId } from "../../hooks/useUserId";
 import { formatDate } from "../../utils/dateHelper";
+import { fetchWithAuth } from "../../services/api";
 const scheduleData = [
     {
         id: 1,
@@ -23,9 +24,7 @@ const TutorSchedule = () => {
         if (!id) return;
         const fetchSchedules = async () => {
             try {
-                const res = await fetch(
-                    `https://localhost:7211/api/tutors/${id}/slots`
-                );
+                const res = await fetchWithAuth(`/api/tutors/${id}/slots`);
                 if (!res.ok) throw new Error(`Lỗi ${res.message}`);
                 const { data } = await res.json();
                 setSchedules(data);
@@ -79,7 +78,9 @@ const TutorSchedule = () => {
                             <h2 className="text-xl font-semibold">
                                 {slot.courseTitle}
                             </h2>
-                            <p className="text-gray-600">Ngày: {formatDate(slot.date)}</p>
+                            <p className="text-gray-600">
+                                Ngày: {formatDate(slot.date)}
+                            </p>
                             <p className="text-gray-600">Giờ: {slot.time}</p>
                         </div>
                     </div>
@@ -89,10 +90,11 @@ const TutorSchedule = () => {
                 <button
                     onClick={handleBack}
                     disabled={currentPage === 1}
-                    className={`px-4 py-2 rounded ${currentPage === 1
-                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        : "bg-blue-500 text-white hover:bg-blue-600"
-                        }`}
+                    className={`px-4 py-2 rounded ${
+                        currentPage === 1
+                            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                            : "bg-blue-500 text-white hover:bg-blue-600"
+                    }`}
                 >
                     Back
                 </button>
@@ -101,10 +103,11 @@ const TutorSchedule = () => {
                     <button
                         key={i}
                         onClick={() => setCurrentPage(i + 1)}
-                        className={`px-4 py-2 rounded ${currentPage === i + 1
-                            ? "bg-blue-700 text-white"
-                            : "bg-gray-300 text-black"
-                            }`}
+                        className={`px-4 py-2 rounded ${
+                            currentPage === i + 1
+                                ? "bg-blue-700 text-white"
+                                : "bg-gray-300 text-black"
+                        }`}
                     >
                         {i + 1}
                     </button>
@@ -113,10 +116,11 @@ const TutorSchedule = () => {
                 <button
                     onClick={handleNext}
                     disabled={currentPage === totalPages}
-                    className={`px-4 py-2 rounded ${currentPage === totalPages
-                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        : "bg-blue-500 text-white hover:bg-blue-600"
-                        }`}
+                    className={`px-4 py-2 rounded ${
+                        currentPage === totalPages
+                            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                            : "bg-blue-500 text-white hover:bg-blue-600"
+                    }`}
                 >
                     Next
                 </button>
@@ -124,6 +128,5 @@ const TutorSchedule = () => {
         </div>
     );
 };
-
 
 export default TutorSchedule;

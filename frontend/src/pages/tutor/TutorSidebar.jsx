@@ -5,7 +5,7 @@ import {
     FaUserGraduate,
     FaCalendarAlt,
     FaEnvelope,
-    FaEdit,
+    // FaEdit,
     FaPlusCircle,
 } from "react-icons/fa";
 
@@ -15,6 +15,12 @@ const TutorSidebar = () => {
             <h2 className="text-2xl font-bold mb-6">Gia sư Dashboard</h2>
 
             <nav className="space-y-4">
+                <Link
+                    to="/tutor"
+                    className="flex items-center gap-3 hover:bg-[#000060] p-2 rounded-lg"
+                >
+                    <FaChalkboardTeacher /> DashBoard
+                </Link>
                 <Link
                     to="/tutor/classes"
                     className="flex items-center gap-3 hover:bg-[#000060] p-2 rounded-lg"
@@ -45,12 +51,12 @@ const TutorSidebar = () => {
                 >
                     <FaEnvelope /> Tin nhắn từ học viên
                 </Link>
-                <Link
+                {/* <Link
                     to="/tutor/profile-edit"
                     className="flex items-center gap-3 hover:bg-[#000060] p-2 rounded-lg"
                 >
                     <FaEdit /> Cập nhật hồ sơ
-                </Link>
+                </Link> */}
             </nav>
         </div>
     );

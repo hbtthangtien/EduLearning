@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { useUserId } from "../../hooks/useUserId";
+import { fetchWithAuth } from "../../services/api";
 const classesData = [
     { id: 1, title: "IELTS Cấp tốc", students: 30 },
     { id: 2, title: "TOEIC 750+", students: 25 },
@@ -18,9 +19,7 @@ const TutorClasses = () => {
         if (!id) return;
         const fetchTutorCourses = async () => {
             try {
-                const res = await fetch(
-                    `https://localhost:7211/api/tutors/${id}/courses`
-                );
+                const res = await fetchWithAuth(`/api/tutors/${id}/courses`);
                 if (!res.ok) throw new Error(`Lỗi ${res.message}`);
                 const { data } = await res.json();
                 setCourses(data);
@@ -29,8 +28,7 @@ const TutorClasses = () => {
             } finally {
                 setDashLoading(false);
             }
-
-        }
+        };
         fetchTutorCourses();
     }, [id]);
     if (dashLoading) {
@@ -89,10 +87,11 @@ const TutorClasses = () => {
                 <button
                     onClick={handleBack}
                     disabled={currentPage === 1}
-                    className={`px-4 py-2 rounded ${currentPage === 1
+                    className={`px-4 py-2 rounded ${
+                        currentPage === 1
                             ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                             : "bg-blue-500 text-white hover:bg-blue-600"
-                        }`}
+                    }`}
                 >
                     Back
                 </button>
@@ -101,10 +100,11 @@ const TutorClasses = () => {
                     <button
                         key={i}
                         onClick={() => setCurrentPage(i + 1)}
-                        className={`px-4 py-2 rounded ${currentPage === i + 1
+                        className={`px-4 py-2 rounded ${
+                            currentPage === i + 1
                                 ? "bg-blue-700 text-white"
                                 : "bg-gray-300 text-black"
-                            }`}
+                        }`}
                     >
                         {i + 1}
                     </button>
@@ -113,10 +113,11 @@ const TutorClasses = () => {
                 <button
                     onClick={handleNext}
                     disabled={currentPage === totalPages}
-                    className={`px-4 py-2 rounded ${currentPage === totalPages
+                    className={`px-4 py-2 rounded ${
+                        currentPage === totalPages
                             ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                             : "bg-blue-500 text-white hover:bg-blue-600"
-                        }`}
+                    }`}
                 >
                     Next
                 </button>
@@ -124,6 +125,5 @@ const TutorClasses = () => {
         </div>
     );
 };
-
 
 export default TutorClasses;

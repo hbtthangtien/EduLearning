@@ -1,10 +1,71 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { fetchWithAuth } from "../services/api";
 
 const ChatBox = ({ user, partner }) => {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
+    const bottomRef = useRef(null);
 
-    // 🚀 Gửi tin nhắn
+    useEffect(() => {
+        const fetchMessages = async () => {
+            if (!user?.id || !partner?.id) return;
+
+            try {
+                const res = await fetchWithAuth(
+                    `/api/Chat/conversation/${partner.id}?currentUserId=${user.id}`
+                );
+                const data = await res.json();
+
+                setMessages(
+                    data.map((msg) => ({
+                        content: msg.content,
+                        sentAt: msg.sentAt,
+                        fromSelf: String(msg.senderId) === String(user.id),
+                    }))
+                );
+
+                const unreadMessageIds = data
+                    .filter((msg) => msg.receiverId === user.id && !msg.isRead)
+                    .map((msg) => msg.id);
+
+                if (unreadMessageIds.length === 0) {
+                    console.log(
+                        "ℹ️ Không có tin nhắn chưa đọc, bỏ qua gọi mark-as-read."
+                    );
+                    return;
+                }
+
+                const markRes = await fetchWithAuth(
+                    `/api/Chat/mark-as-read?currentUserId=${user.id}`,
+                    {
+                        method: "POST",
+                        body: JSON.stringify({ messageIds: unreadMessageIds }),
+                    }
+                );
+
+                const markData = await markRes.json();
+
+                if (!markRes.ok) {
+                    if (markData?.error?.includes("No unread messages")) {
+                        console.log("ℹ️ Không có tin chưa đọc cần đánh dấu.");
+                    } else {
+                        console.warn("❗ mark-as-read thất bại:", markData);
+                    }
+                } else {
+                    console.log("✅ Tin nhắn đã được đánh dấu đã đọc.");
+                }
+            } catch (err) {
+                console.error("Lỗi load tin nhắn:", err);
+            }
+        };
+
+        fetchMessages();
+    }, [user?.id, partner?.id]);
+
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
+
     const handleSend = async () => {
         if (!input.trim()) return;
 
@@ -14,10 +75,8 @@ const ChatBox = ({ user, partner }) => {
             content: input,
         };
 
-        console.log("Sending message:", payload);
-
         try {
-            const res = await fetch("https://localhost:7211/api/Chat/send", {
+            const res = await fetchWithAuth("/api/Chat/send", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
@@ -26,11 +85,10 @@ const ChatBox = ({ user, partner }) => {
             const data = await res.json();
 
             if (!res.ok) {
-                console.error("Gửi lỗi chi tiết:", data);
+                console.error("❌ Gửi lỗi chi tiết:", data);
                 return;
             }
 
-            // ✅ Hiển thị ngay tin nhắn vừa gửi
             setMessages((prev) => [
                 ...prev,
                 {
@@ -41,41 +99,13 @@ const ChatBox = ({ user, partner }) => {
             ]);
             setInput("");
         } catch (err) {
-            console.error("Gửi lỗi:", err.message);
+            console.error("❌ Gửi lỗi:", err.message);
         }
     };
 
-    // 📥 Load lịch sử tin nhắn giữa user và partner
-    useEffect(() => {
-        if (!user?.id || !partner?.id) return;
-
-        const fetchMessages = async () => {
-            try {
-                const res = await fetch(
-                    `https://localhost:7211/api/Chat/conversation/${partner.id}?currentUserId=${user.id}`
-                );
-                const data = await res.json();
-                setMessages(
-                    data.map((msg) => ({
-                        content: msg.content,
-                        sentAt: msg.sentAt,
-                        fromSelf: msg.senderId === user.id,
-                    }))
-                );
-            } catch (err) {
-                console.error("Lỗi load tin nhắn:", err);
-            }
-        };
-
-        fetchMessages();
-    }, [user.id, partner.id]);
-
     return (
         <div className="flex flex-col h-[400px] bg-white border rounded shadow w-full">
-            <div
-                className="flex-1 overflow-y-auto p-3 space-y-2"
-                id="chat-messages"
-            >
+            <div className="flex-1 overflow-y-auto p-3 space-y-2">
                 {messages.map((msg, index) => (
                     <div
                         key={index}
@@ -97,6 +127,7 @@ const ChatBox = ({ user, partner }) => {
                         </div>
                     </div>
                 ))}
+                <div ref={bottomRef}></div>
             </div>
 
             <div className="p-2 border-t flex">

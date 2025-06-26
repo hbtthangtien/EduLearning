@@ -17,7 +17,6 @@ const CourseDetail = () => {
     const [error, setError] = useState("");
     const [showChat, setShowChat] = useState(false);
 
-    // 👇 Lấy thông tin user từ localStorage sau khi login
     const student = {
         id: Number(localStorage.getItem("id")),
         name: localStorage.getItem("name") || "Học viên",
