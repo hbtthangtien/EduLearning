@@ -17,9 +17,10 @@ export const refreshAccessToken = async () => {
     const response = await fetch(`${API_BASE_URL}/api/Auth/refresh`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refreshToken }),
+        body: JSON.stringify({ RefreshToken: refreshToken }),
     });
-
+    const text = await response.text();
+    console.log("💬 Response từ API refresh:", text);
     if (!response.ok) {
         throw new Error("Làm mới token thất bại");
     }
@@ -45,6 +46,9 @@ export const fetchWithAuth = async (url, options = {}) => {
                 token = await refreshAccessToken();
             } catch (error) {
                 console.error("❌ Không thể refresh token:", error.message);
+                localStorage.removeItem("token");
+                localStorage.removeItem("refreshToken");
+                window.location.href = "/login";
                 throw error;
             }
         }

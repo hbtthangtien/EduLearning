@@ -6,7 +6,7 @@ import Users from "../pages/admin/Users";
 import Courses from "../pages/admin/Courses";
 import Report from "../pages/admin/Report";
 import ApproveTutors from "../pages/admin/ApproveTutors";
-import TutorClasses from "../pages/tutor/TutorClasses";
+import ApproveClasses from "../pages/admin/ApproveClasses";
 
 export const getAdminRoutes = () => (
     <Route path="/admin" element={<AdminLayout />}>
@@ -15,6 +15,6 @@ export const getAdminRoutes = () => (
         <Route path="courses" element={<Courses />} />
         <Route path="reports" element={<Report />} />
         <Route path="approve" element={<ApproveTutors />} />
-        <Route path="approve/classes" element={<TutorClasses />} />
+        <Route path="approve/classes" element={<ApproveClasses />} />
     </Route>
 );

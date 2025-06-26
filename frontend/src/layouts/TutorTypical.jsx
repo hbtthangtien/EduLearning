@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { fetchWithAuth } from "../services/api";
 
 const TutorTypical = () => {
     const [tutors, setTutors] = useState([]);
@@ -7,7 +8,7 @@ const TutorTypical = () => {
     useEffect(() => {
         const fetchTutors = async () => {
             try {
-                const res = await fetch("https://localhost:7211/api/home");
+                const res = await fetchWithAuth("/api/home");
                 if (!res.ok) throw new Error(`Lỗi ${res.status}`);
                 const data = await res.json();
                 setTutors(data.tutors);

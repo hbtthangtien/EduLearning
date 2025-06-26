@@ -85,11 +85,15 @@ const ApproveTutors = () => {
                 <table className="min-w-full bg-white shadow rounded-xl overflow-hidden border border-gray-200">
                     <thead>
                         <tr className="bg-indigo-700 text-white text-sm uppercase">
-                            <th className="px-4 py-3 text-left">Họ tên</th>
-                            <th className="px-4 py-3 text-left">Chuyên môn</th>
-                            <th className="px-4 py-3 text-left">Giới thiệu</th>
-                            <th className="px-4 py-3 text-left">Chứng chỉ</th>
-                            <th className="px-4 py-3 text-center">Hành động</th>
+                            <th className="px-4 py-3 text-left">Họ Tên</th>
+                            <th className="px-4 py-3 text-left">Chuyên Môn</th>
+                            <th className="px-4 py-3 text-left">
+                                Giới Thiệu Bản Thân
+                            </th>
+                            <th className="px-4 py-3 text-left">
+                                Chứng Chỉ Gia Sư
+                            </th>
+                            <th className="px-4 py-3 text-center">Hành Động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -110,20 +114,29 @@ const ApproveTutors = () => {
                                     </td>
                                     <td className="px-4 py-3 text-gray-600">
                                         <div className="flex gap-2">
-                                            {req.certificateUrls && (
-                                                <a
-                                                    href={req.certificateUrls}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    <img
-                                                        src={
-                                                            req.certificateUrls
-                                                        }
-                                                        alt="Front Certificate"
-                                                        className="w-24 h-auto rounded shadow hover:scale-105 transition-transform"
-                                                    />
-                                                </a>
+                                            {req.certificateUrls?.length >
+                                                0 && (
+                                                <div className="flex gap-2">
+                                                    {req.certificateUrls.map(
+                                                        (url, index) => (
+                                                            <a
+                                                                key={index}
+                                                                href={url}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                            >
+                                                                <img
+                                                                    src={url}
+                                                                    alt={`Chứng chỉ ${
+                                                                        index +
+                                                                        1
+                                                                    }`}
+                                                                    className="w-24 h-auto rounded shadow hover:scale-105 transition-transform"
+                                                                />
+                                                            </a>
+                                                        )
+                                                    )}
+                                                </div>
                                             )}
                                         </div>
                                     </td>

@@ -11,7 +11,7 @@ const HomePage = () => {
     return (
         <div
             className="h-full min-h-screen bg-cover bg-center bg-fixed"
-            style={{ backgroundImage: `url(${logo})`, zIndex: -1 }} // ✅ Đặt background phía sau
+            style={{ backgroundImage: `url(${logo})`, zIndex: -1 }}
         >
             <Navbar />
             <HeroSection />
@@ -19,7 +19,7 @@ const HomePage = () => {
             <StarSection />
             <BecomeTutorSection />
             <TutorTypical />
-            <ChatbotWidget/>
+            <ChatbotWidget />
         </div>
     );
 };

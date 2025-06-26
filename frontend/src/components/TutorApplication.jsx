@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import backgroundImage from "../assest/background.jpg";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import { refreshAccessToken } from "../services/api";
 
 const TutorApplication = () => {
     const [formData, setFormData] = useState({
@@ -92,8 +91,7 @@ const TutorApplication = () => {
                 setMessage("✅ Đăng ký thành công! Đang kiểm tra vai trò...");
 
                 try {
-                    const newAccessToken = await refreshAccessToken();
-                    const decoded = jwtDecode(newAccessToken);
+                    const decoded = jwtDecode(token);
                     const role =
                         decoded.role ||
                         decoded[
@@ -108,7 +106,7 @@ const TutorApplication = () => {
                         );
                     }
                 } catch (err) {
-                    console.error("❌ Không thể làm mới token:", err.message);
+                    console.error("❌ Không thể giải mã token:", err.message);
                     setMessage(
                         "✅ Đăng ký thành công! Nhưng không thể kiểm tra vai trò."
                     );

@@ -132,11 +132,12 @@ const ChatBox = ({ user, partner }) => {
 
             <div className="p-2 border-t flex">
                 <input
-                    className="flex-1 border rounded p-2 mr-2"
+                    className="flex-1 border rounded p-2 mr-2 text-black bg-white placeholder-gray-400"
                     placeholder="Nhập tin nhắn..."
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                 />
+
                 <button
                     onClick={handleSend}
                     className="bg-[#000080] text-white px-4 py-2 rounded"

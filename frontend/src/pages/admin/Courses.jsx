@@ -73,7 +73,7 @@ const Courses = () => {
     return (
         <div className="p-6">
             <h1 className="text-3xl font-bold text-[#000080]">
-                Quản lý Khóa học
+                Quản Lý Lớp Học
             </h1>
 
             {message && (

@@ -1,4 +1,3 @@
-// src/pages/EnrollPage.jsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import backgroundImage from "../assest/7.jpg";
