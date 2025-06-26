@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { refreshAccessToken } from "../../services/api";
+import { fetchWithAuth, refreshAccessToken } from "../../services/api";
 
 const Courses = () => {
     const [courses, setCourses] = useState([]);
@@ -17,14 +17,11 @@ const Courses = () => {
                 return;
             }
 
-            const res = await fetch(
-                "https://localhost:7211/api/admin/users/course",
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const res = await fetchWithAuth("/api/admin/users/course", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
             if (res.status === 401 && !retry) {
                 const newToken = await refreshAccessToken();

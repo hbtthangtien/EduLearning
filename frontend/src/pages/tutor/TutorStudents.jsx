@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaUserGraduate } from "react-icons/fa";
 import { useUserId } from "../../hooks/useUserId";
-
+import { fetchWithAuth } from "../../services/api";
 const TutorStudents = () => {
     const { id } = useUserId();
     const [students, setStudents] = useState([]);
@@ -14,8 +14,8 @@ const TutorStudents = () => {
         if (!id) return;
         const fetchStudents = async () => {
             try {
-                const res = await fetch(
-                    `https://localhost:7211/api/tutors/${id}/courses/students`
+                const res = await fetchWithAuth(
+                    `/api/tutors/${id}/courses/students`
                 );
                 if (!res.ok) throw new Error(`Lỗi ${res.message}`);
                 const { data } = await res.json();

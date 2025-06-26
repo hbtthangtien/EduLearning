@@ -9,20 +9,28 @@ const TutorApplication = () => {
         Fullname: "",
         Introduces: "",
         Specializations: "",
+        FrontImage: null,
+        BackImage: null,
     });
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const { name, value, files } = e.target;
+        if (name === "FrontImage" || name === "BackImage") {
+            setFormData((prev) => ({ ...prev, [name]: files[0] }));
+        } else {
+            setFormData((prev) => ({ ...prev, [name]: value }));
+        }
     };
 
     const isFormValid = () => {
         return (
             formData.Fullname.trim() &&
             formData.Introduces.trim() &&
-            formData.Specializations.trim()
+            formData.Specializations.trim() &&
+            formData.FrontImage &&
+            formData.BackImage
         );
     };
 
@@ -31,7 +39,9 @@ const TutorApplication = () => {
         setMessage("");
 
         if (!isFormValid()) {
-            setMessage("❌ Vui lòng điền đầy đủ thông tin.");
+            setMessage(
+                "❌ Vui lòng điền đầy đủ thông tin và tải lên 2 ảnh chứng chỉ."
+            );
             return;
         }
 
@@ -45,6 +55,8 @@ const TutorApplication = () => {
         form.append("Fullname", formData.Fullname.trim());
         form.append("Introduces", formData.Introduces.trim());
         form.append("Specializations", formData.Specializations.trim());
+        form.append("FrontImage", formData.FrontImage);
+        form.append("BackImage", formData.BackImage);
 
         try {
             const response = await fetch(
@@ -59,7 +71,10 @@ const TutorApplication = () => {
             );
 
             const rawText = await response.text();
+            console.log("🧾 Raw response:", rawText);
+
             const result = rawText ? JSON.parse(rawText) : {};
+            console.log("🧾 JSON result:", result);
 
             if (!response.ok) {
                 const errorDetails = result?.errors
@@ -89,7 +104,7 @@ const TutorApplication = () => {
                         navigate("/tutor");
                     } else {
                         setMessage(
-                            "✅ Đăng ký thành công! Nhưng vai trò chưa thay đổi."
+                            "✅ Đăng ký thành công! Hãy Đợi Chúng Tôi Duyệt Đơn Của Bạn."
                         );
                     }
                 } catch (err) {
@@ -103,6 +118,8 @@ const TutorApplication = () => {
                     Fullname: "",
                     Introduces: "",
                     Specializations: "",
+                    FrontImage: null,
+                    BackImage: null,
                 });
             } else {
                 setMessage(`❌ ${result?.title || "Đăng ký thất bại."}`);
@@ -174,6 +191,34 @@ const TutorApplication = () => {
                                 Tiếng Anh Phổ Thông
                             </option>
                         </select>
+                    </div>
+
+                    <div className="mb-4">
+                        <label className="block text-gray-600">
+                            Ảnh chứng chỉ - Mặt trước
+                        </label>
+                        <input
+                            type="file"
+                            name="FrontImage"
+                            accept="image/*"
+                            onChange={handleChange}
+                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#000080] bg-white"
+                            required
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <label className="block text-gray-600">
+                            Ảnh chứng chỉ - Mặt sau
+                        </label>
+                        <input
+                            type="file"
+                            name="BackImage"
+                            accept="image/*"
+                            onChange={handleChange}
+                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#000080] bg-white"
+                            required
+                        />
                     </div>
 
                     {message && (

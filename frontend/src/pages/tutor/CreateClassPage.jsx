@@ -143,7 +143,7 @@ const CreateClassPage = () => {
                 if (!res.ok) throw new Error('Lỗi khi gửi dữ liệu lên server');
 
                 alert('Đã tạo khoá học thành công!');
-                // reset form...
+                
             } catch (err) {
                 alert('Có lỗi: ' + err.message);
             } finally {

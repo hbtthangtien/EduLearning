@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { useUserId } from "../../hooks/useUserId";
+import { fetchWithAuth } from "../../services/api";
 const classesData = [
     { id: 1, title: "IELTS Cấp tốc", students: 30 },
     { id: 2, title: "TOEIC 750+", students: 25 },
@@ -18,9 +19,7 @@ const TutorClasses = () => {
         if (!id) return;
         const fetchTutorCourses = async () => {
             try {
-                const res = await fetch(
-                    `https://localhost:7211/api/tutors/${id}/courses`
-                );
+                const res = await fetchWithAuth(`/api/tutors/${id}/courses`);
                 if (!res.ok) throw new Error(`Lỗi ${res.message}`);
                 const { data } = await res.json();
                 setCourses(data);
@@ -29,8 +28,7 @@ const TutorClasses = () => {
             } finally {
                 setDashLoading(false);
             }
-
-        }
+        };
         fetchTutorCourses();
     }, [id]);
     if (dashLoading) {
@@ -160,6 +158,5 @@ const TutorClasses = () => {
         </div>
     );
 };
-
 
 export default TutorClasses;

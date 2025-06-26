@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { FaUserGraduate, FaStar, FaBookOpen } from "react-icons/fa";
 import backgroundImage from "../assest/2.jpg";
+import { Link } from "react-router-dom";
 
 const TutorList = () => {
     const [tutors, setTutors] = useState([]);

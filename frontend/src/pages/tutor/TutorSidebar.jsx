@@ -1,13 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-    FaChalkboardTeacher,
-    FaUserGraduate,
-    FaCalendarAlt,
-    FaEnvelope,
-    FaEdit,
-    FaPlusCircle,
-} from "react-icons/fa";
+import { FaChalkboardTeacher, FaUserGraduate, FaCalendarAlt, FaEnvelope, FaEdit, FaPlusCircle } from "react-icons/fa";
 
 const sidebarLinks = [
     {
@@ -46,7 +39,6 @@ const sidebarLinks = [
         label: "Tạo slots cho học sinh"
     }
 ];
-
 const TutorSidebar = () => {
     const location = useLocation();
 
@@ -73,6 +65,7 @@ const TutorSidebar = () => {
                         {link.label}
                     </Link>
                 ))}
+
             </nav>
         </aside>
     );
