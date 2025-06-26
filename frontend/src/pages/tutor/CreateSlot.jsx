@@ -53,7 +53,7 @@ const CreateSlot = () => {
     const fetchCourse = async () => {
       try {
         const res = await fetch(
-          `https://localhost:7211/api/tutors/${id}/slots/courses`
+          `http://edusync.somee.com/api/tutors/${id}/slots/courses`
         );
         if (!res.ok) throw new Error(`Lỗi ${res.message}`);
         const { data } = await res.json();

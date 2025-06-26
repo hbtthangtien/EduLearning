@@ -24,7 +24,7 @@ const RegisterForm = () => {
 
         try {
             const response = await fetch(
-                "https://localhost:7211/api/Auth/register",
+                "http://edusync.somee.com/api/Auth/register",
                 {
                     method: "POST",
                     headers: {

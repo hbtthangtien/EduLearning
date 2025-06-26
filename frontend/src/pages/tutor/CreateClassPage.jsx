@@ -135,7 +135,7 @@ const CreateClassPage = () => {
             if (courseData.backImage) formData.append('BackImage', courseData.backImage);
             try {
                 // Gửi API (thay url thật của bạn)
-                const res = await fetch(`https://localhost:7211/api/tutors/${id}/courses`, {
+                const res = await fetch(`http://edusync.somee.com/api/tutors/${id}/courses`, {
                     method: 'POST',
                     body: formData,
                 });

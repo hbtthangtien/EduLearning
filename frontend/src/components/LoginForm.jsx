@@ -17,7 +17,7 @@ const LoginForm = () => {
 
         try {
             const response = await fetch(
-                "https://localhost:7211/api/Auth/login",
+                "http://edusync.somee.com/api/Auth/login",
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },

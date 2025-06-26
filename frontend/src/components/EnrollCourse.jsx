@@ -17,7 +17,7 @@ const EnrollCourse = () => {
         const fetchCourse = async () => {
             try {
                 const res = await fetch(
-                    `https://localhost:7211/api/courses/${id}`
+                    `http://edusync.somee.com/api/courses/${id}`
                 );
                 if (!res.ok) throw new Error(`Lỗi ${res.status}`);
                 const data = await res.json();

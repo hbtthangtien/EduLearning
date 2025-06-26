@@ -12,7 +12,7 @@ const CourseList = () => {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const res = await fetch("https://localhost:7211/api/courses");
+                const res = await fetch("http://edusync.somee.com/api/courses");
                 const data = await res.json();
                 setCourses(data);
             } catch (err) {

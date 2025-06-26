@@ -59,7 +59,7 @@ const TutorApplication = () => {
 
         try {
             const response = await fetch(
-                "https://localhost:7211/api/student/register-tutor",
+                "http://edusync.somee.com/api/student/register-tutor",
                 {
                     method: "POST",
                     headers: {
