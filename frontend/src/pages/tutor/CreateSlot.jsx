@@ -8,11 +8,11 @@ import { faVideo } from '@fortawesome/free-solid-svg-icons';
 import { Dialog } from '@headlessui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
-const COURSE_OPTIONS = [
-  { id: '1', name: 'Python cơ bản', teacher: 'Nguyễn Văn A', price: 500000 },
-  { id: '2', name: 'IELTS Speaking', teacher: 'Trần Thị B', price: 350000 },
-  { id: '3', name: 'Lập trình Web', teacher: 'Phạm Văn C', price: 450000 },
-];
+// const COURSE_OPTIONS = [
+//   { id: '1', name: 'Python cơ bản', teacher: 'Nguyễn Văn A', price: 500000 },
+//   { id: '2', name: 'IELTS Speaking', teacher: 'Trần Thị B', price: 350000 },
+//   { id: '3', name: 'Lập trình Web', teacher: 'Phạm Văn C', price: 450000 },
+// ];
 
 const WEEKDAYS = [
   { label: 'T2', value: 1 },
