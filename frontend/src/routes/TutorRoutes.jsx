@@ -8,6 +8,7 @@ import TutorSchedule from "../pages/tutor/TutorSchedule";
 import TutorMessages from "../pages/tutor/TutorMessages";
 import TutorProfile from "../pages/tutor/TutorProfile";
 import CreateClassPage from "../pages/tutor/CreateClassPage";
+import CreateSlot from "../pages/tutor/CreateSlot";
 
 export const getTutorRoutes = () => (
     <Route path="/tutor" element={<TutorLayout />}>
@@ -18,5 +19,6 @@ export const getTutorRoutes = () => (
         <Route path="messages" element={<TutorMessages />} />
         <Route path="profile-edit" element={<TutorProfile />} />
         <Route path="create-class" element={<CreateClassPage />} />
+        <Route path="slots" element={<CreateSlot/>}/>
     </Route>
 );

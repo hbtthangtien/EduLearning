@@ -5,6 +5,7 @@ import StarSection from "./StarSection";
 import BecomeTutorSection from "./BecomeTutorSection";
 import TutorTypical from "./TutorTypical";
 import logo from "../assest/background.jpg";
+import ChatbotWidget from "../components/ChatboxWidget";
 
 const HomePage = () => {
     return (
@@ -18,6 +19,7 @@ const HomePage = () => {
             <StarSection />
             <BecomeTutorSection />
             <TutorTypical />
+            <ChatbotWidget/>
         </div>
     );
 };

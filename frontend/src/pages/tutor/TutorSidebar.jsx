@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
     FaChalkboardTeacher,
     FaUserGraduate,
@@ -9,50 +9,72 @@ import {
     FaPlusCircle,
 } from "react-icons/fa";
 
-const TutorSidebar = () => {
-    return (
-        <div className="bg-[#000080] text-white w-64 h-screen flex flex-col p-6">
-            <h2 className="text-2xl font-bold mb-6">Gia sư Dashboard</h2>
+const sidebarLinks = [
+    {
+        to: "/tutor/classes",
+        icon: <FaChalkboardTeacher />,
+        label: "Quản lý lớp học"
+    },
+    {
+        to: "/tutor/create-class",
+        icon: <FaPlusCircle />,
+        label: "Tạo lớp học"
+    },
+    {
+        to: "/tutor/students",
+        icon: <FaUserGraduate />,
+        label: "Học viên đã đăng ký"
+    },
+    {
+        to: "/tutor/schedule",
+        icon: <FaCalendarAlt />,
+        label: "Lịch dạy"
+    },
+    {
+        to: "/tutor/messages",
+        icon: <FaEnvelope />,
+        label: "Tin nhắn từ học viên"
+    },
+    {
+        to: "/tutor/profile-edit",
+        icon: <FaEdit />,
+        label: "Cập nhật hồ sơ"
+    },
+    {
+        to: "/tutor/slots",
+        icon: <FaEdit />,
+        label: "Tạo slots cho học sinh"
+    }
+];
 
-            <nav className="space-y-4">
-                <Link
-                    to="/tutor/classes"
-                    className="flex items-center gap-3 hover:bg-[#000060] p-2 rounded-lg"
-                >
-                    <FaChalkboardTeacher /> Quản lý lớp học
-                </Link>
-                <Link
-                    to="/tutor/create-class"
-                    className="flex items-center gap-3 hover:bg-[#000060] p-2 rounded-lg"
-                >
-                    <FaPlusCircle /> Tạo lớp học
-                </Link>
-                <Link
-                    to="/tutor/students"
-                    className="flex items-center gap-3 hover:bg-[#000060] p-2 rounded-lg"
-                >
-                    <FaUserGraduate /> Học viên đã đăng ký
-                </Link>
-                <Link
-                    to="/tutor/schedule"
-                    className="flex items-center gap-3 hover:bg-[#000060] p-2 rounded-lg"
-                >
-                    <FaCalendarAlt /> Lịch dạy
-                </Link>
-                <Link
-                    to="/tutor/messages"
-                    className="flex items-center gap-3 hover:bg-[#000060] p-2 rounded-lg"
-                >
-                    <FaEnvelope /> Tin nhắn từ học viên
-                </Link>
-                <Link
-                    to="/tutor/profile-edit"
-                    className="flex items-center gap-3 hover:bg-[#000060] p-2 rounded-lg"
-                >
-                    <FaEdit /> Cập nhật hồ sơ
-                </Link>
+const TutorSidebar = () => {
+    const location = useLocation();
+
+    return (
+        <aside className="bg-gradient-to-b from-blue-900 to-blue-700 text-white w-64 min-h-screen flex flex-col p-6 shadow-xl border-r border-blue-800">
+            {/* Có thể thêm avatar/ logo ở đây */}
+            <div className="mb-8 flex items-center gap-3">
+                {/* <img src="/your-logo.png" alt="Logo" className="w-10 h-10 rounded-full shadow" /> */}
+                <span className="text-2xl font-extrabold tracking-tight">Gia sư Dashboard</span>
+            </div>
+
+            <nav className="flex-1 space-y-2">
+                {sidebarLinks.map(link => (
+                    <Link
+                        key={link.to}
+                        to={link.to}
+                        className={`flex items-center gap-3 px-3 py-3 rounded-lg font-medium text-base transition-all 
+                            ${location.pathname === link.to
+                                ? "bg-gradient-to-r from-blue-600 to-pink-500 shadow-lg text-white scale-105"
+                                : "hover:bg-blue-600 hover:shadow text-blue-100"
+                            }`}
+                    >
+                        <span className="text-lg">{link.icon}</span>
+                        {link.label}
+                    </Link>
+                ))}
             </nav>
-        </div>
+        </aside>
     );
 };
 
