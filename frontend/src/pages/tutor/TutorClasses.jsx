@@ -2,16 +2,12 @@ import React, { useEffect, useState } from "react";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { useUserId } from "../../hooks/useUserId";
 import { fetchWithAuth } from "../../services/api";
-const classesData = [
-    { id: 1, title: "IELTS Cấp tốc", students: 30 },
-    { id: 2, title: "TOEIC 750+", students: 25 },
-];
 
 const TutorClasses = () => {
     const [courses, setCourses] = useState([]);
     const [dashLoading, setDashLoading] = useState(true);
     const [dashError, setDashError] = useState("");
-    const { id, loading, error } = useUserId();
+    const { id } = useUserId();
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 4;
 
@@ -57,17 +53,17 @@ const TutorClasses = () => {
     const indexOfFirst = indexOfLast - itemsPerPage;
     const currentCourses = courses.slice(indexOfFirst, indexOfLast);
     const totalPages = Math.ceil(courses.length / itemsPerPage);
-    function getCourseStatusLabel(status) {
-        switch (status) {
-            case 0: return "Nháp";
-            case 1: return "Chờ duyệt";
-            case 2: return "Đã duyệt";
-            case 3: return "Từ chối";
-            case 4: return "Đã xuất bản";
-            case 5: return "Lưu trữ";
-            default: return status;
-        }
-    }
+    // function getCourseStatusLabel(status) {
+    //     switch (status) {
+    //         case 0: return "Nháp";
+    //         case 1: return "Chờ duyệt";
+    //         case 2: return "Đã duyệt";
+    //         case 3: return "Từ chối";
+    //         case 4: return "Đã xuất bản";
+    //         case 5: return "Lưu trữ";
+    //         default: return status;
+    //     }
+    // }
     const statusMap = {
         0: { label: "Nháp", color: "bg-gray-300 text-gray-700", icon: "📝" },
         1: { label: "Chờ duyệt", color: "bg-yellow-200 text-yellow-800", icon: "⏳" },

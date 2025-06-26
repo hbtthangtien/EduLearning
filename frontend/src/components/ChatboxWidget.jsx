@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { FaRobot, FaPaperPlane, FaComments } from "react-icons/fa";
 
 const BOT_NAME = "AI Trợ lý";
-const WIDGET_COLOR = "#5b2cff"; // chỉnh màu nếu muốn
+//const WIDGET_COLOR = "#5b2cff"; // chỉnh màu nếu muốn
 
 const defaultWelcome = "Xin chào! Tôi có thể giúp gì cho bạn hôm nay?";
 
