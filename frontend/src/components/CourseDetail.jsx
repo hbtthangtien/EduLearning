@@ -44,7 +44,7 @@ const CourseDetail = () => {
         const fetchCourse = async () => {
             try {
                 const res = await fetch(
-                    `http://edusync.somee.com/api/courses/${id}`
+                    `https://edusyncc-f8atbbd5ene8a3c9.canadacentral-01.azurewebsites.net/api/courses/${id}`
                 );
                 if (!res.ok) throw new Error(`Lỗi ${res.status}`);
                 const data = await res.json();
