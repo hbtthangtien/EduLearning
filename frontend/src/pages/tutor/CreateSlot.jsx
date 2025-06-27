@@ -53,7 +53,7 @@ const CreateSlot = () => {
     const fetchCourse = async () => {
       try {
         const res = await fetch(
-          `http://edusync.somee.com/api/tutors/${id}/slots/courses`
+          `hhttps://edusyncc-f8atbbd5ene8a3c9.canadacentral-01.azurewebsites.net/api/tutors/${id}/slots/courses`
         );
         if (!res.ok) throw new Error(`Lỗi ${res.message}`);
         const { data } = await res.json();
@@ -108,7 +108,7 @@ const CreateSlot = () => {
       console.log(slotData);
       try {
         const response = await fetch(
-          `https://localhost:7211/api/tutors/${id}/courses/${slotData.courseId}/slots`,
+          `https://edusyncc-f8atbbd5ene8a3c9.canadacentral-01.azurewebsites.net/api/tutors/${id}/courses/${slotData.courseId}/slots`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

@@ -15,7 +15,7 @@ const TutorStudents = () => {
         const fetchStudents = async () => {
             try {
                 const res = await fetch(
-                    `http://edusync.somee.com/api/tutors/${id}/courses/students`
+                    `https://edusyncc-f8atbbd5ene8a3c9.canadacentral-01.azurewebsites.net/api/tutors/${id}/courses/students`
                 );
                 if (!res.ok) throw new Error(`Lỗi ${res.message}`);
                 const { data } = await res.json();

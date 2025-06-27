@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 
-const API_BASE_URL = "http://edusync.somee.com";
+const API_BASE_URL = "https://edusyncc-f8atbbd5ene8a3c9.canadacentral-01.azurewebsites.net";
 
 const getAccessToken = () => localStorage.getItem("token");
 const getRefreshToken = () => localStorage.getItem("refreshToken");
