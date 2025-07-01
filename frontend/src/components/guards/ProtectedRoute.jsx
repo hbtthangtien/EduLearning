@@ -1,9 +1,9 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-
+import {useAuth} from "../../context/AuthContext"
 const ProtectedRoute = ({ redirectPath = '/login', allowedRoles }) => {
     const token = localStorage.getItem("token");
-
+    const { logout } = useAuth();
     // Không có token → chưa đăng nhập
     if (!token) {
         return <Navigate to={redirectPath} replace />;
@@ -23,6 +23,7 @@ const ProtectedRoute = ({ redirectPath = '/login', allowedRoles }) => {
         if (userRole === "student") return <Navigate to="/home" replace />;
         if (userRole === "tutor") return <Navigate to="/tutor" replace />;
         if (userRole === "admin") return <Navigate to="/admin" replace />;
+        logout();
         return <Navigate to={redirectPath} replace />;
     }
 
