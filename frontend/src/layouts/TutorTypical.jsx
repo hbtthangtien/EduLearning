@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchWithAuth } from "../services/api";
-
+import tutorImage from "../assest/tutors.png";
 const TutorTypical = () => {
     const [tutors, setTutors] = useState([]);
     const [error, setError] = useState("");
@@ -37,7 +37,7 @@ const TutorTypical = () => {
                     className="bg-white p-6 rounded-lg shadow-lg text-center hover:shadow-xl transition"
                 >
                     <img
-                        src={"https://www.pinterest.com/pin/1900024838434063/"}
+                        src={tutorImage}
                         alt={tutor.fullName}
                         className="w-24 h-24 rounded-full mx-auto border-4 border-[#000080]"
                     />
