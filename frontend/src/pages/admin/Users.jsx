@@ -2,9 +2,12 @@ import React, { useEffect, useState, useCallback } from "react";
 import { fetchWithAuth, refreshAccessToken } from "../../services/api";
 
 const Users = () => {
+    const [allUsers, setAllUsers] = useState([]);
     const [users, setUsers] = useState([]);
     const [message, setMessage] = useState("");
-
+    const [searchTerm, setSearchTerm] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize] = useState(5);
     const fetchUsers = useCallback(async (retry = false) => {
         try {
             let token = localStorage.getItem("token");
@@ -42,11 +45,25 @@ const Users = () => {
 
             const data = await res.json();
             setUsers(data);
+            setAllUsers(data);
         } catch (err) {
             console.error("❌ Lỗi khi gọi API:", err);
             setMessage("❌ Không thể kết nối đến máy chủ.");
         }
     }, []);
+    // search, filter, 
+    useEffect(() => {
+        const filtered = allUsers.filter(
+            (user) =>
+                user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                user.email?.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        const start = (currentPage - 1) * pageSize;
+        const paginated = filtered.slice(start, start + pageSize);
+
+        setUsers(paginated);
+    }, [allUsers, searchTerm, currentPage, pageSize]);
 
     useEffect(() => {
         fetchUsers();
@@ -82,6 +99,7 @@ const Users = () => {
 
             setMessage("✅ Xóa người dùng thành công.");
             setUsers((prev) => prev.filter((u) => u.id !== userId));
+            setAllUsers((prev) => prev.filter((u) => u.id !== userId));
         } catch (err) {
             console.error("❌ Lỗi khi xóa:", err);
             setMessage("❌ Không thể kết nối để xóa.");
@@ -99,6 +117,16 @@ const Users = () => {
                     {message}
                 </p>
             )}
+            <input
+                type="text"
+                placeholder="Nhập tên hoặc email..."
+                className="p-2 border rounded-md w-80 mb-4"
+                value={searchTerm}
+                onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1); // reset về trang 1
+                }}
+            />
 
             <div className="bg-white rounded-xl shadow overflow-x-auto">
                 <table className="min-w-full text-sm text-left">
@@ -148,6 +176,42 @@ const Users = () => {
                     </tbody>
                 </table>
             </div>
+
+            <div className="flex justify-center mt-6 space-x-2">
+                <button
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                >
+                    ◀ Trước
+                </button>
+                <span className="px-4 py-1">
+                    Trang {currentPage} / {Math.ceil(
+                        allUsers.filter(
+                            (user) =>
+                                user.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                user.email?.toLowerCase().includes(searchTerm.toLowerCase())
+                        ).length / pageSize
+                    )}
+                </span>
+                <button
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                    onClick={() => setCurrentPage((prev) => prev + 1)}
+                    disabled={
+                        currentPage >=
+                        Math.ceil(
+                            allUsers.filter(
+                                (user) =>
+                                    user.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                    user.email?.toLowerCase().includes(searchTerm.toLowerCase())
+                            ).length / pageSize
+                        )
+                    }
+                >
+                    Sau ▶
+                </button>
+            </div>
+
         </div>
     );
 };

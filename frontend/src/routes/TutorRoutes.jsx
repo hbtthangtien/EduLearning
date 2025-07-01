@@ -9,16 +9,18 @@ import TutorMessages from "../pages/tutor/TutorMessages";
 import TutorProfile from "../pages/tutor/TutorProfile";
 import CreateClassPage from "../pages/tutor/CreateClassPage";
 import CreateSlot from "../pages/tutor/CreateSlot";
-
+import ProtectedRoute from "../components/guards/ProtectedRoute";
 export const getTutorRoutes = () => (
-    <Route path="/tutor" element={<TutorLayout />}>
-        <Route index element={<TutorDashboard />} />
-        <Route path="classes" element={<TutorClasses />} />
-        <Route path="students" element={<TutorStudents />} />
-        <Route path="schedule" element={<TutorSchedule />} />
-        <Route path="messages" element={<TutorMessages />} />
-        <Route path="profile-edit" element={<TutorProfile />} />
-        <Route path="create-class" element={<CreateClassPage />} />
-        <Route path="slots" element={<CreateSlot/>}/>
+    <Route element={<ProtectedRoute allowedRoles={["tutor"]}/>}>
+        <Route path="/tutor" element={<TutorLayout />}>
+            <Route index element={<TutorDashboard />} />
+            <Route path="classes" element={<TutorClasses />} />
+            <Route path="students" element={<TutorStudents />} />
+            <Route path="schedule" element={<TutorSchedule />} />
+            <Route path="messages" element={<TutorMessages />} />
+            <Route path="profile-edit" element={<TutorProfile />} />
+            <Route path="create-class" element={<CreateClassPage />} />
+            <Route path="slots" element={<CreateSlot />} />
+        </Route>
     </Route>
 );

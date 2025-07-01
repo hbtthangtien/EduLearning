@@ -14,6 +14,7 @@ import EnrollCourse from "../components/EnrollCourse";
 export const getPublicRoutes = () => (
     <>
         <Route path="/" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/contact" element={<ContactForm />} />
