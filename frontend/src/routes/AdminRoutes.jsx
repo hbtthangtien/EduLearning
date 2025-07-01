@@ -7,14 +7,16 @@ import Courses from "../pages/admin/Courses";
 import Report from "../pages/admin/Report";
 import ApproveTutors from "../pages/admin/ApproveTutors";
 import ApproveClasses from "../pages/admin/ApproveClasses";
-
+import ProtectedRoute from "../components/guards/ProtectedRoute";
 export const getAdminRoutes = () => (
-    <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="users" element={<Users />} />
-        <Route path="courses" element={<Courses />} />
-        <Route path="reports" element={<Report />} />
-        <Route path="approve" element={<ApproveTutors />} />
-        <Route path="approve/classes" element={<ApproveClasses />} />
+    <Route element={<ProtectedRoute allowedRoles={["admin"]}/>}>
+        <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="users" element={<Users />} />
+            <Route path="courses" element={<Courses />} />
+            <Route path="reports" element={<Report />} />
+            <Route path="approve" element={<ApproveTutors />} />
+            <Route path="approve/classes" element={<ApproveClasses />} />
+        </Route>
     </Route>
 );

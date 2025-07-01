@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import backgroundImage from "../assest/background.jpg";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { refreshAccessToken } from "../services/api";
 
 const TutorApplication = () => {
     const [formData, setFormData] = useState({
@@ -13,7 +14,8 @@ const TutorApplication = () => {
     });
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
-
+    const [loading, setLoading] = useState(false);
+    const [successDialog, setSuccessDialog] = useState(false);
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         if (name === "FrontImage" || name === "BackImage") {
@@ -32,7 +34,10 @@ const TutorApplication = () => {
             formData.BackImage
         );
     };
-
+    const handleClose = () => {
+        setSuccessDialog(false);
+        navigate("/home");
+    }
     const handleSubmit = async (e) => {
         e.preventDefault();
         setMessage("");
@@ -56,7 +61,7 @@ const TutorApplication = () => {
         form.append("Specializations", formData.Specializations.trim());
         form.append("FrontImage", formData.FrontImage);
         form.append("BackImage", formData.BackImage);
-
+        setLoading(true);
         try {
             const response = await fetch(
                 "https://edusyncc-f8atbbd5ene8a3c9.canadacentral-01.azurewebsites.net/api/student/register-tutor",
@@ -78,12 +83,13 @@ const TutorApplication = () => {
             if (!response.ok) {
                 const errorDetails = result?.errors
                     ? Object.entries(result.errors)
-                          .map(
-                              ([field, msgs]) => `${field}: ${msgs.join(", ")}`
-                          )
-                          .join(" | ")
-                    : result?.title || "Lỗi không xác định";
-                setMessage(`❌ Lỗi từ server: ${errorDetails}`);
+                        .map(
+                            ([field, msgs]) => `${field}: ${msgs.join(", ")}`
+                        )
+                        .join(" | ")
+                    : result?.title || result.message || "Lỗi không xác định";
+                setMessage(`❌ ${errorDetails}`);
+                setLoading(false);
                 return;
             }
 
@@ -91,25 +97,24 @@ const TutorApplication = () => {
                 setMessage("✅ Đăng ký thành công! Đang kiểm tra vai trò...");
 
                 try {
-                    const decoded = jwtDecode(token);
+                    const newAccessToken = await refreshAccessToken();
+                    const decoded = jwtDecode(newAccessToken);
                     const role =
                         decoded.role ||
                         decoded[
-                            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+                        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
                         ];
 
                     if (role?.toLowerCase() === "tutor") {
                         navigate("/tutor");
                     } else {
-                        setMessage(
-                            "✅ Đăng ký thành công! Hãy Đợi Chúng Tôi Duyệt Đơn Của Bạn."
-                        );
+                        setSuccessDialog(true);
+
                     }
                 } catch (err) {
-                    console.error("❌ Không thể giải mã token:", err.message);
-                    setMessage(
-                        "✅ Đăng ký thành công! Nhưng không thể kiểm tra vai trò."
-                    );
+                    setSuccessDialog(true);
+                    console.error("❌ Không thể làm mới token:", err.message);
+
                 }
 
                 setFormData({
@@ -126,6 +131,7 @@ const TutorApplication = () => {
             console.error("❌ Lỗi gửi đơn:", err);
             setMessage("❌ Không thể kết nối tới máy chủ.");
         }
+        setLoading(false);
     };
 
     return (
@@ -133,6 +139,31 @@ const TutorApplication = () => {
             className="min-h-screen flex items-center justify-center bg-cover bg-center bg-fixed p-10"
             style={{ backgroundImage: `url(${backgroundImage})` }}
         >
+            {/* Loading Overlay */}
+            {loading && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white px-8 py-6 rounded-lg shadow-lg text-center">
+                        <div className="loader mb-4 mx-auto"></div>
+                        <p className="text-lg font-medium text-gray-700">Đang gửi đơn đăng ký...</p>
+                    </div>
+                </div>
+            )}
+
+            {/* Success Dialog */}
+            {successDialog && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white px-8 py-6 rounded-lg shadow-lg text-center">
+                        <h3 className="text-xl font-semibold text-green-600 mb-4">🎉 Đăng ký thành công!</h3>
+                        <p>Hãy đợi chúng tôi duyệt đơn của bạn. Cảm ơn bạn đã đăng ký.</p>
+                        <button
+                            onClick={() => handleClose()}
+                            className="mt-4 px-6 py-2 bg-[#000080] text-white rounded hover:bg-[#000060]"
+                        >
+                            Đóng
+                        </button>
+                    </div>
+                </div>
+            )}
             <div className="w-full max-w-lg bg-white bg-opacity-80 p-6 rounded-lg shadow-lg">
                 <h2 className="text-2xl font-bold text-[#000080] text-center">
                     Đăng ký trở thành Gia sư
