@@ -9,7 +9,7 @@ const TutorList = () => {
     const [tutors, setTutors] = useState([]);
     const [selectedSpecialty, setSelectedSpecialty] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const tutorsPerPage = 4;
+    const tutorsPerPage = 6;
 
     useEffect(() => {
         const fetchTutors = async () => {
@@ -76,29 +76,31 @@ const TutorList = () => {
                         Danh sách Gia sư
                     </h1>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
                         {currentTutors.map((tutor) => (
                             <div
                                 key={tutor.id}
-                                className="bg-white bg-opacity-80 p-6 rounded-lg shadow-lg flex flex-col items-center"
+                                className="bg-white bg-opacity-80 p-6 rounded-lg shadow-lg flex flex-col justify-between items-center h-[460px]"
                             >
                                 <FaUserGraduate className="text-[#000080] text-6xl mb-3" />
-                                <h2 className="text-2xl font-semibold">
+                                <h2 className="text-2xl font-semibold text-center">
                                     {tutor.fullName}
                                 </h2>
-                                <p className="text-gray-600">
-                                    {tutor.introduces}
+                                <p className="text-gray-600 text-sm text-center mt-2">
+                                    {tutor.introduces?.length > 120
+                                        ? `${tutor.introduces.slice(0, 120)}...`
+                                        : tutor.introduces}
                                 </p>
-                                <p className="text-[#000080] font-medium flex items-center gap-2">
+                                <p className="text-[#000080] font-medium flex items-center gap-2 mt-2">
                                     <FaBookOpen /> {tutor.specializations?.[0]}
                                 </p>
-                                <p className="text-yellow-500 flex items-center gap-2">
+                                <p className="text-yellow-500 flex items-center gap-2 mt-1">
                                     <FaStar /> {tutor.rating} ★
                                 </p>
 
                                 <Link
                                     to={`/tutor-detail/${tutor.id}`}
-                                    className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-yellow-600 transition inline-block"
+                                    className="mt-auto bg-yellow-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-yellow-600 transition inline-block"
                                 >
                                     Xem chi tiết
                                 </Link>

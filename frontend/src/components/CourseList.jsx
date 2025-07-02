@@ -12,7 +12,9 @@ const CourseList = () => {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const res = await fetch("https://edusyncc-f8atbbd5ene8a3c9.canadacentral-01.azurewebsites.net/api/courses");
+                const res = await fetch(
+                    "https://edusyncc-f8atbbd5ene8a3c9.canadacentral-01.azurewebsites.net/api/courses"
+                );
                 const data = await res.json();
                 setCourses(data);
             } catch (err) {
@@ -76,24 +78,26 @@ const CourseList = () => {
                         {currentCourses.map((course) => (
                             <div
                                 key={course.id}
-                                className="bg-white bg-opacity-80 p-6 rounded-lg shadow-lg"
+                                className="bg-white bg-opacity-80 p-6 rounded-lg shadow-lg flex flex-col justify-between h-[300px]"
                             >
-                                <h2 className="text-xl font-semibold">
-                                    {course.title}
-                                </h2>
-                                <p className="text-gray-600">
-                                    Giảng viên: {course.tutorName}
-                                </p>
-                                <p className="text-gray-600">
-                                    Học viên: {course.studentCount}
-                                </p>
-                                <p className="text-[#000080] font-medium">
-                                    {course.description}
-                                </p>
+                                <div>
+                                    <h2 className="text-xl font-semibold">
+                                        {course.title}
+                                    </h2>
+                                    <p className="text-gray-600">
+                                        Giảng viên: {course.tutorName}
+                                    </p>
+                                    <p className="text-gray-600">
+                                        Học viên: {course.studentCount}
+                                    </p>
+                                    <p className="text-[#000080] font-medium line-clamp-3">
+                                        {course.description}
+                                    </p>
+                                </div>
 
                                 <Link
                                     to={`/course-detail/${course.id}`}
-                                    className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-yellow-600 transition inline-block"
+                                    className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-yellow-600 transition inline-block self-start"
                                 >
                                     Xem chi tiết
                                 </Link>
