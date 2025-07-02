@@ -10,6 +10,7 @@ import CourseDetail from "../components/CourseDetail";
 import TutorDetail from "../components/TutorDetail";
 import HomePage from "../layouts/HomePage";
 import EnrollCourse from "../components/EnrollCourse";
+import MyClassesPage from "../pages/student/MyClassesPage";
 
 export const getPublicRoutes = () => (
     <>
@@ -24,5 +25,6 @@ export const getPublicRoutes = () => (
         <Route path="/course-detail/:id" element={<CourseDetail />} />
         <Route path="/tutor-detail/:id" element={<TutorDetail />} />
         <Route path="/enroll/:id" element={<EnrollCourse />} />
+        <Route path="/my-classes" element={<MyClassesPage />} />
     </>
 );

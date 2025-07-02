@@ -74,9 +74,6 @@ const TutorDetail = () => {
                         <h2 className="text-3xl font-semibold">
                             {tutorData.fullName || tutorData.name}
                         </h2>
-                        <p className="text-gray-600">
-                            Tuổi: {tutorData.age || "Không rõ"}
-                        </p>
                         <p className="text-gray-600 mt-2">
                             {tutorData.bio || tutorData.introduces}
                         </p>
