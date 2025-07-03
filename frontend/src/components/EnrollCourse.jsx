@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import backgroundImage from "../assest/7.jpg";
-import qrImage from "../assest/QrImage.jpg";
+import QRchuan from "../assest/QRchuan.jpg";
 
 const EnrollCourse = () => {
     const { id } = useParams();
@@ -32,7 +32,7 @@ const EnrollCourse = () => {
         fetchCourse();
     }, [id]);
 
-    // 👉 CHỈ HIỆN QR, không gọi API
+    // dang chi CHỈ HIỆN QR, không gọi API
     const handleEnroll = () => {
         setMessage("✅ Vui lòng quét mã QR để thanh toán.");
         setShowQR(true);
@@ -104,7 +104,7 @@ const EnrollCourse = () => {
                             📷 Quét mã QR để thanh toán
                         </p>
                         <img
-                            src={qrImage}
+                            src={QRchuan}
                             alt="QR Code"
                             className="mx-auto w-64 h-64 border rounded-lg shadow-lg"
                         />
