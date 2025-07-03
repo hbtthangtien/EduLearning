@@ -2,9 +2,11 @@ import { Dialog } from '@headlessui/react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
+import { FaStar } from 'react-icons/fa';
 
 const RateTutorPopup = ({ isOpen, onClose, tutorId }) => {
   const [score, setScore] = useState(0);
+  const [hovered, setHovered] = useState(null);
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -12,6 +14,7 @@ const RateTutorPopup = ({ isOpen, onClose, tutorId }) => {
     if (!isOpen) {
       setScore(0);
       setComment('');
+      setHovered(null);
     }
   }, [isOpen]);
 
@@ -34,7 +37,7 @@ const RateTutorPopup = ({ isOpen, onClose, tutorId }) => {
         throw new Error(result.message || 'Lỗi gửi đánh giá');
       }
 
-      toast.success('Đánh giá thành công!');
+      toast.success('✨ Đánh giá thành công!');
       onClose();
     } catch (err) {
       toast.error(err.message);
@@ -47,47 +50,61 @@ const RateTutorPopup = ({ isOpen, onClose, tutorId }) => {
     <AnimatePresence>
       {isOpen && (
         <Dialog open={isOpen} onClose={onClose} className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm transition-opacity" />
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.7, opacity: 0 }}
-            className="bg-white rounded-2xl p-6 max-w-md w-full shadow-xl z-50"
+            className="bg-gradient-to-br from-white via-blue-50 to-pink-50 rounded-3xl shadow-2xl p-8 max-w-md w-full z-50"
           >
-            <Dialog.Title className="text-xl font-bold mb-4 text-center">Đánh giá giáo viên</Dialog.Title>
-            <div className="mb-3">
-              <label className="font-medium">Điểm đánh giá (1–5):</label>
-              <input
-                type="number"
-                min={1}
-                max={5}
-                value={score}
-                onChange={(e) => setScore(Number(e.target.value))}
-                className="w-full mt-1 p-2 border rounded-xl"
-              />
+            <Dialog.Title className="text-2xl font-bold text-center mb-6 text-blue-700">
+              ✨ Đánh giá giáo viên
+            </Dialog.Title>
+
+            <div className="mb-4 text-center">
+              <label className="block text-lg font-medium mb-2">Chọn số sao:</label>
+              <div className="flex justify-center gap-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <FaStar
+                    key={star}
+                    className={`w-8 h-8 cursor-pointer transition ${
+                      star <= (hovered || score)
+                        ? 'text-yellow-400 drop-shadow' 
+                        : 'text-gray-300'
+                    }`}
+                    onClick={() => setScore(star)}
+                    onMouseEnter={() => setHovered(star)}
+                    onMouseLeave={() => setHovered(null)}
+                  />
+                ))}
+              </div>
             </div>
-            <div className="mb-4">
-              <label className="font-medium">Nhận xét:</label>
+
+            <div className="mb-5">
+              <label className="block text-lg font-medium mb-1">Nhận xét của bạn:</label>
               <textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 rows={4}
-                className="w-full mt-1 p-2 border rounded-xl"
-                placeholder="Nhập nhận xét của bạn..."
+                className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300"
+                placeholder="Ví dụ: Thầy cô dạy rất nhiệt tình, dễ hiểu..."
               ></textarea>
             </div>
+
             <div className="flex justify-end gap-3">
               <button
                 onClick={onClose}
-                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-xl hover:bg-gray-400 transition"
+                className="px-5 py-2 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400 transition"
               >
                 Hủy
               </button>
               <button
                 onClick={submitRating}
                 disabled={loading}
-                className={`px-4 py-2 rounded-xl text-white ${
-                  loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
+                className={`px-6 py-2 rounded-full font-semibold text-white shadow ${
+                  loading
+                    ? 'bg-blue-400 cursor-not-allowed' 
+                    : 'bg-blue-600 hover:bg-blue-700'
                 } transition`}
               >
                 {loading ? 'Đang gửi...' : 'Gửi đánh giá'}
