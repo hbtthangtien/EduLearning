@@ -9,7 +9,6 @@ import {
 } from "react-icons/fa";
 import backgroundImage from "../assest/6.jpg";
 import ChatBox from "../components/ChatBox";
-import ChatboxWidget from "../components/ChatboxWidget";
 const CourseDetail = () => {
     const { id } = useParams();
     const [course, setCourse] = useState(null);
@@ -189,7 +188,6 @@ const CourseDetail = () => {
                     </div>
                 )}
             </div>
-            <ChatboxWidget />
         </>
     );
 };

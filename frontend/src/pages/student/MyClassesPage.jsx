@@ -108,7 +108,7 @@ const MyClassesPage = () => {
                                 </button>
                             </div>
 
-                            <div className="mt-4">
+                            {!cls.isRated && <div className="mt-4">
                                 <button
                                     onClick={() => {
                                         setSelectedTutorId(cls.tutorId);
@@ -118,7 +118,7 @@ const MyClassesPage = () => {
                                 >
                                     Đánh giá giáo viên
                                 </button>
-                            </div>
+                            </div>}
                         </div>
                     ))}
                 </div>
