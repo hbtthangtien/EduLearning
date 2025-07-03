@@ -32,10 +32,37 @@ const EnrollCourse = () => {
         fetchCourse();
     }, [id]);
 
-    // dang chi CHỈ HIỆN QR, không gọi API
-    const handleEnroll = () => {
-        setMessage("✅ Vui lòng quét mã QR để thanh toán.");
-        setShowQR(true);
+    const handleEnroll = async () => {
+        try {
+            const res = await fetch(
+                "https://edusyncc-f8atbbd5ene8a3c9.canadacentral-01.azurewebsites.net/api/student/enroll-course",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                    },
+                    body: JSON.stringify({
+                        courseId: id,
+                        paymentMethod: selectedPayment,
+                    }),
+                }
+            );
+
+            if (!res.ok) {
+                throw new Error("Đăng ký thất bại");
+            }
+
+            await res.json();
+
+            setMessage("✅ Vui lòng quét mã QR để thanh toán.");
+            setShowQR(true);
+        } catch (err) {
+            setMessage("❌ Đăng ký thất bại: " + err.message);
+            setShowQR(false);
+        }
     };
 
     if (loading)
