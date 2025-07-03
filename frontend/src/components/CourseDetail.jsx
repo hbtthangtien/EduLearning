@@ -136,7 +136,7 @@ const CourseDetail = () => {
 
                     <div className="mb-6">
                         <h3 className="text-2xl font-semibold flex items-center gap-2">
-                            <FaPlayCircle /> Nội dung khóa học
+                            <FaPlayCircle /> Nội Dung Lớp Học
                         </h3>
                         <ul className="mt-3 list-disc list-inside space-y-1 text-lg">
                             {course.courseContents

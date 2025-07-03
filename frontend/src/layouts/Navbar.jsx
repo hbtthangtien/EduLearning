@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assest/logoedusync.png";
-import {useAuth} from "../context/AuthContext"
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -51,21 +51,39 @@ const Navbar = () => {
             </div>
 
             {/* Auth Section */}
-            <div className="space-x-3">
+            <div className="relative inline-block group text-left">
                 {user ? (
-                    <>
-                        <span className="text-white font-medium">
+                    <div className="bg-transparent">
+                        {/* Gói cả Hello và dropdown vào 1 div */}
+                        <div className="text-white font-medium cursor-pointer px-3 py-2">
                             Hello, {user.name}
-                        </span>
-                        <button
-                            onClick={handleLogout}
-                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+                        </div>
+
+                        {/* Dropdown menu – KHÔNG dùng mt-2 nữa */}
+                        <div
+                            className="absolute left-[-80px] top-full w-52 bg-white rounded-md shadow-lg
+                opacity-0 invisible group-hover:visible group-hover:opacity-100
+                transition duration-200 z-50"
                         >
-                            Logout
-                        </button>
-                    </>
+                            {user.role === "Student" && (
+                                <Link
+                                    to="/my-classes"
+                                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                >
+                                    Lớp Học Của Tôi
+                                </Link>
+                            )}
+
+                            <button
+                                onClick={handleLogout}
+                                className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                            >
+                                Đăng Xuất
+                            </button>
+                        </div>
+                    </div>
                 ) : (
-                    <>
+                    <div className="space-x-3">
                         <Link
                             to="/login"
                             className="bg-white text-[#000080] px-5 py-2 rounded-lg hover:bg-gray-200 font-medium"
@@ -78,7 +96,7 @@ const Navbar = () => {
                         >
                             Đăng ký
                         </Link>
-                    </>
+                    </div>
                 )}
             </div>
         </nav>

@@ -11,7 +11,7 @@ const TutorTypical = () => {
                 const res = await fetchWithAuth("/api/home");
                 if (!res.ok) throw new Error(`Lỗi ${res.status}`);
                 const data = await res.json();
-                setTutors(data.tutors);
+                setTutors(data.tutors.slice(0, 3));
             } catch (err) {
                 setError(err.message);
             }

@@ -55,7 +55,7 @@ const EnrollCourse = () => {
         >
             <div className="bg-white bg-opacity-80 p-8 rounded-lg shadow-lg max-w-3xl w-full text-[#000080]">
                 <h1 className="text-4xl font-bold mb-6 text-center">
-                    Xác nhận Đăng ký Khóa học
+                    Xác nhận Đăng ký Lớp Học
                 </h1>
                 <h2 className="text-2xl font-semibold">{course.title}</h2>
                 <p className="mt-2">Giảng viên: {course.tutorBio.fullName}</p>
