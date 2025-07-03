@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import backgroundImage from "../assest/5.jpg";
 import ChatBox from "../components/ChatBox";
 import { fetchWithAuth } from "../services/api";
-import ChatbotWidget from "../components/ChatboxWidget";
 const TutorDetail = () => {
     const { id } = useParams();
     const [tutor, setTutor] = useState(null);
@@ -120,7 +119,6 @@ const TutorDetail = () => {
                     </div>
                 )}
             </div>
-            <ChatbotWidget />
         </>
     );
 };

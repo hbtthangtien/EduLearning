@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import backgroundImage from "../assest/3.jpg";
-import ChatboxWidget from "../components/ChatboxWidget";
 
 const CourseList = () => {
     const [courses, setCourses] = useState([]);
@@ -147,7 +146,7 @@ const CourseList = () => {
             </div>
 
             {/* Chatbox hiển thị cố định */}
-            <ChatboxWidget />
+
         </>
     );
 };

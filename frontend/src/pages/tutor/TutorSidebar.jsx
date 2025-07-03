@@ -4,6 +4,11 @@ import { FaChalkboardTeacher, FaUserGraduate, FaCalendarAlt, FaEnvelope, FaEdit,
 
 const sidebarLinks = [
     {
+        to: "/tutor",
+        icon: <FaChalkboardTeacher />,
+        label: "Dashboard"
+    },
+    {
         to: "/tutor/classes",
         icon: <FaChalkboardTeacher />,
         label: "Quản lý lớp học"

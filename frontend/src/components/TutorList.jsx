@@ -3,7 +3,7 @@ import { FaUserGraduate, FaStar, FaBookOpen } from "react-icons/fa";
 import backgroundImage from "../assest/2.jpg";
 import { Link } from "react-router-dom";
 import { fetchWithAuth } from "../services/api";
-import ChatbotWidget from "../components/ChatboxWidget";
+
 
 const TutorList = () => {
     const [tutors, setTutors] = useState([]);
@@ -150,7 +150,6 @@ const TutorList = () => {
             </div>
 
             {/* Chatbot Widget hiển thị ở mọi page */}
-            <ChatbotWidget />
         </>
     );
 };

@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { BookOpenIcon, ClockIcon, UserIcon } from "@heroicons/react/24/outline";
+import { BookOpenIcon, UserIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
-
+import RateTutorPopup from "../../components/RateTutorPopUp";
+import { useNavigate } from "react-router-dom";
 const MyClassesPage = () => {
     const { user } = useAuth();
     const [myClasses, setMyClasses] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const [showRating, setShowRating] = useState(false);
+    const [selectedTutorId, setSelectedTutorId] = useState(null);
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchRegisteredCourses = async () => {
             try {
@@ -84,31 +88,50 @@ const MyClassesPage = () => {
                                     </span>{" "}
                                     {cls.tutorName || "Chưa rõ"}
                                 </p>
-                                <p className="flex items-center gap-2">
-                                    <ClockIcon className="w-4 h-4" />
-                                    <span className="font-medium">
-                                        Lịch học:
-                                    </span>{" "}
-                                    {cls.schedule || "Đang cập nhật"}
-                                </p>
                             </div>
 
                             <div className="flex justify-between items-center mt-4">
                                 <span
-                                    className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusClass(
+                                    className={`px-3 py-1 rounded-full bg-green-500 text-white text-sm font-medium ${getStatusClass(
                                         cls.status
                                     )}`}
                                 >
                                     {cls.status || "Chưa rõ"}
                                 </span>
-                                <button className="text-sm text-blue-600 hover:underline font-medium">
+                                <button
+                                    className="text-sm text-blue-600 hover:underline font-medium"
+                                    onClick={() =>
+                                        navigate(`/classes/${cls.courseId}`)
+                                    }
+                                >
                                     Xem chi tiết
                                 </button>
                             </div>
+
+                            {!cls.isRated && <div className="mt-4">
+                                <button
+                                    onClick={() => {
+                                        setSelectedTutorId(cls.tutorId);
+                                        setShowRating(true);
+                                    }}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-xl"
+                                >
+                                    Đánh giá giáo viên
+                                </button>
+                            </div>}
                         </div>
                     ))}
                 </div>
             )}
+
+            <RateTutorPopup
+                isOpen={showRating}
+                onClose={() => {
+                    setShowRating(false);
+                    setSelectedTutorId(null);
+                }}
+                tutorId={selectedTutorId}
+            />
         </div>
     );
 };
