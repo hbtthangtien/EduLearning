@@ -26,9 +26,11 @@ const RateTutorPopup = ({ isOpen, onClose, tutorId }) => {
 
     setLoading(true);
     try {
-      const response = await fetch(`https://localhost:7211/api/tutors/${tutorId}/rate`, {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`https://edusyncc-f8atbbd5ene8a3c9.canadacentral-01.azurewebsites.net/api/student/add/rate`, {
+        
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',Authorization: `Bearer ${token}`, },
         body: JSON.stringify({ tutorId, score, comment }),
       });
 
@@ -67,11 +69,10 @@ const RateTutorPopup = ({ isOpen, onClose, tutorId }) => {
                 {[1, 2, 3, 4, 5].map((star) => (
                   <FaStar
                     key={star}
-                    className={`w-8 h-8 cursor-pointer transition ${
-                      star <= (hovered || score)
-                        ? 'text-yellow-400 drop-shadow' 
-                        : 'text-gray-300'
-                    }`}
+                    className={`w-8 h-8 cursor-pointer transition ${star <= (hovered || score)
+                      ? 'text-yellow-400 drop-shadow'
+                      : 'text-gray-300'
+                      }`}
                     onClick={() => setScore(star)}
                     onMouseEnter={() => setHovered(star)}
                     onMouseLeave={() => setHovered(null)}
@@ -101,11 +102,10 @@ const RateTutorPopup = ({ isOpen, onClose, tutorId }) => {
               <button
                 onClick={submitRating}
                 disabled={loading}
-                className={`px-6 py-2 rounded-full font-semibold text-white shadow ${
-                  loading
-                    ? 'bg-blue-400 cursor-not-allowed' 
-                    : 'bg-blue-600 hover:bg-blue-700'
-                } transition`}
+                className={`px-6 py-2 rounded-full font-semibold text-white shadow ${loading
+                  ? 'bg-blue-400 cursor-not-allowed'
+                  : 'bg-blue-600 hover:bg-blue-700'
+                  } transition`}
               >
                 {loading ? 'Đang gửi...' : 'Gửi đánh giá'}
               </button>
