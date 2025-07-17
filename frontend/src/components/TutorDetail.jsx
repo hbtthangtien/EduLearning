@@ -81,12 +81,7 @@ const TutorDetail = () => {
                             {tutorData.specializations || "Chưa cập nhật"}
                         </p>
 
-                        <button
-                            onClick={() => setShowChat(true)}
-                            className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-yellow-600 transition"
-                        >
-                            Gửi tin nhắn
-                        </button>
+                       
                     </div>
                 ) : (
                     <p className="text-red-500 text-xl mt-6">

@@ -153,12 +153,7 @@ const CourseDetail = () => {
                         >
                             📢 Đăng ký ngay
                         </Link>
-                        <button
-                            onClick={() => setShowChat(true)}
-                            className="bg-[#000080] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-[#000060] transition"
-                        >
-                            💬 Nhắn với gia sư
-                        </button>
+                        
                     </div>
                 </div>
 
