@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaChalkboardTeacher, FaUserGraduate, FaCalendarAlt, FaEnvelope, FaEdit, FaPlusCircle } from "react-icons/fa";
+import { FaChalkboardTeacher, FaUserGraduate, FaCalendarAlt, FaEdit, FaPlusCircle } from "react-icons/fa";
 
 const sidebarLinks = [
     {
@@ -28,11 +28,7 @@ const sidebarLinks = [
         icon: <FaCalendarAlt />,
         label: "Lịch dạy"
     },
-    {
-        to: "/tutor/messages",
-        icon: <FaEnvelope />,
-        label: "Tin nhắn từ học viên"
-    },
+    
     {
         to: "/tutor/profile-edit",
         icon: <FaEdit />,
